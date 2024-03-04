@@ -29,7 +29,6 @@ def train_vocab():
             of.write(paragraph + "\n\n")
     print(f"Size is: {os.path.getsize(tiny_file) / 1024 / 1024:.2f} MB")
 
-
     spm.SentencePieceTrainer.train(input=tiny_file,
                                    model_prefix=prefix,
                                    model_type="bpe",
@@ -62,26 +61,26 @@ def process_paragraph(paragraph_chunk, tqdm_position):
 def pretokenize():
     dataset = datasets.load_dataset("roneneldan/TinyStories")
     text = dataset["train"]["text"]
-    print("text obtained")
+    print(f"Text obtained")
 
     chunk_list = lambda l, n: [l[i:i+n] for i in range(0, len(l), n)]
     tqdm_position = lambda n: [i for i in range(0, n)]
 
     with ProcessPoolExecutor(max_workers=NUM_CPU_THREAD) as e:
         chunks = e.map(process_paragraph, chunk_list(text[:PARAGRAPH_SIZE], PARAGRAPH_SIZE//NUM_CPU_THREAD), tqdm_position(NUM_CPU_THREAD))
-    print("encoding done")
+
+    os.system('clear')
+    print(f"Encoding done")
 
     tokens_list = [tokens for chunk in chunks for tokens in chunk]
 
-    tokens_packed = [token for tokens in tokens_list for token in tokens]
-    tokens_packed = torch.tensor(tokens_packed).int()
-    offsets_packed = torch.tensor([0] + [len(tokens) for tokens in tokens_list])
-    offsets_packed = torch.cumsum(offsets_packed, dim=0)
+    tokens_packed = torch.tensor([token for tokens in tokens_list for token in tokens]).int()
+    offsets_packed = torch.cumsum(torch.tensor([0] + [len(tokens) for tokens in tokens_list]), dim=0).int()
 
-    print(f"saving tokens as binary files(.pt)")
+    print(f"Saving tokens as binary files(.pt)")
     torch.save(tokens_packed, os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
     torch.save(offsets_packed, os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
-    print(f"done")
+    print(f"Done")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
