@@ -12,16 +12,19 @@ DATA_CACHE_DIR = "./data"
 
 tokenizer = Tokenizer("./data/", "token2048.model")
 
-model = Model(ModelArgs(
-    vocab_size=tokenizer.vocab_size
-))
+model_args = ModelArgs(vocab_size=tokenizer.vocab_size)
+
+model = Model(model_args)
 model.cuda()
 
 if __name__ == "__main__":
     tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"), map_location="cuda")
     offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"), map_location="cuda")
 
-    first_paragraph = tokens_packed[offsets_packed[0]:offsets_packed[1]]
+    first_paragraph = tokens_packed[offsets_packed[0] : offsets_packed[1]]
+    first_paragraph = torch.nn.functional.pad(
+        first_paragraph, (0, model_args.s - first_paragraph.size(-1)), value=tokenizer.eos_id
+    )
     first_paragraph = rearrange(first_paragraph, "s -> 1 s")
 
     output = model(first_paragraph)
@@ -37,7 +40,3 @@ if __name__ == "__main__":
     # print(f"{tokens_packed.max()=}")
     # print(f"{offsets_packed=}")
     # print(f"{offsets_packed.max()=}")
-
-
-
-

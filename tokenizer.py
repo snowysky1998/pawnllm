@@ -1,6 +1,7 @@
 import os
 from sentencepiece import SentencePieceProcessor
 
+
 class Tokenizer:
     def __init__(self, DATA_CACHE_DIR, token_model_name):
         """
@@ -19,12 +20,12 @@ class Tokenizer:
         self.bos_id = self.sp.bos_id()
         self.eos_id = self.sp.eos_id()
         self.pad_id = self.sp.pad_id()
-    
+
     def encode(self, text: str, bos: bool = False, eos: bool = False) -> list[int]:
         """
         encodes the input string
         input:  text(str) : text to be encoded
-                bos(bool) : add bos_id to the output vector 
+                bos(bool) : add bos_id to the output vector
                 eos(bool) : add eos_id to the output vector
         output: (list[int]) : vector of encoded string
         """
@@ -34,7 +35,7 @@ class Tokenizer:
         if eos:
             encoded_token = encoded_token + [self.eos_id]
         return encoded_token
-    
+
     def decode(self, encoded_token: list[int]) -> str:
         """
         decodes the input vector
@@ -42,6 +43,7 @@ class Tokenizer:
         output: (str) : string of decoded vector
         """
         return self.sp.decode(encoded_token)
+
 
 if __name__ == "__main__":
     tokenizer = Tokenizer("./data/", "token2048.model")
