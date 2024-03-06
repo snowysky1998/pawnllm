@@ -13,25 +13,34 @@ class ModelArgs:
     d: int = 128  # hidden dim per head
     h_q: int = 32  # number of query heads
     h_kv: int = 32  # number of key/value heads
-    s: int = 2048  # maximum sequence length
+    s: int = 1024  # maximum sequence length
     n_layers: int = 32  # number of layers
     norm_eps: float = 1e-5
     dropout: float = 0.125
 
 
-class RMSNorm(torch.nn.Module):
+class RMSNorm(nn.Module):
     def __init__(self, dim, eps):
         super().__init__()
         self.eps = eps
         self.weight = nn.Parameter(torch.ones(dim))
 
     def forward(self, x):
+        assert x.ndim == 3
         x = x.float()
         x_squared = x.pow(2)
         x_mean_squared = reduce(x_squared, "b s_q hd -> b s_q 1", "mean")
         x_root_mean_squared = torch.rsqrt(x_mean_squared + self.eps)
         y = x * x_root_mean_squared
         return y.type_as(x) * self.weight
+
+
+class Transformer(nn.Module):
+    def __init__(self, x):
+        pass
+
+    def forward(self, x):
+        pass
 
 
 class Model(nn.Module):
@@ -41,6 +50,7 @@ class Model(nn.Module):
         self.tok_embeddings = nn.Embedding(args.vocab_size, args.h_q * args.d)
         self.dropout = nn.Dropout(p=args.dropout)
         self.norm = RMSNorm(args.h_q * args.d, eps=args.norm_eps)
+        self.wvocab = nn.Linear(args.h_q * args.d, args.vocab_size, bias=False)
 
         # ======================= attention related =================================
         self.attention_norm = RMSNorm(args.h_q * args.d, eps=args.norm_eps)
@@ -65,7 +75,7 @@ class Model(nn.Module):
         self.freq_cos = nn.Parameter(freq_cos, requires_grad=False)
         self.freq_sin = nn.Parameter(freq_sin, requires_grad=False)
 
-        self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')
+        self.flash = hasattr(torch.nn.functional, "scaled_dot_product_attention")
         if not self.flash:
             print("WARNING: using slow attention. Flash Attention requires PyTorch >= 2.0")
             causal_mask = torch.full((1, 1, args.s, args.s), float("-inf"))
@@ -79,11 +89,13 @@ class Model(nn.Module):
         ffn_num_features = math.floor(args.h_q * args.d * 8 / 3)
         ffn_num_features = ((ffn_num_features - 1) // 256) * 256 + 256
         self.w1 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
-        self.w2 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)
-        self.w3 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
+        self.w2 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
+        self.w3 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)
         self.ffn_dropout = nn.Dropout(args.dropout)
 
-    def forward(self, tokens, target=None):
+    def forward(self, tokens, targets=None):
+        assert tokens.ndim == 2
+        assert tokens.ndim == 2 if targets is not None else True
         h = self.tok_embeddings(tokens)
         h = self.dropout(h)
 
@@ -151,20 +163,28 @@ class Model(nn.Module):
 
         if True:
             # feed forward network (FFN)
-            x = F.silu(self.w1(x)) * self.w3(x) # b s (hd) -> b s num_feature
-            x = self.w2(x) # b s num_feature -> b s (hd)
+            x = F.silu(self.w1(x)) * self.w2(x)  # b s (hd) -> b s num_feature
+            x = self.w3(x)  # b s num_feature -> b s (hd)
             o = self.ffn_dropout(x)
 
         # ffn residual
-        h2 = h1 + o
+        h2 = h1 + o  # b s (hd)
         ################################ end of layer ####################################
 
-        h = self.norm(h2)
+        h = self.norm(h2)  # b s (hd)
 
-        return h
+        if self.train:
+            # training: for some desired targets calculate the loss
+            logits = self.wvocab(h)
+            logits = rearrange(logits, "b s vocab_size -> (b s) vocab_size")
+            targets = rearrange(targets, "b s -> (b s)")
+            last_loss = F.cross_entropy(logits, targets, ignore_index=-1)
+            return logits, last_loss
+        else:
+            # inference-time mini-optimization: only forward the output on the very last position
+            logits = self.wvocab(h[:, -1:, :])
+            return logits
 
 # to do
-# logit
 # repeat layer as nn.module
-# check
 # train

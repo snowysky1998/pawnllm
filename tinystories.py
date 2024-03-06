@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub"
 DATA_CACHE_DIR = "./data"
 
 PARAGRAPH_SIZE = 1000000
-VOCAB_SIZE = 2048
+VOCAB_SIZE = 12000
 NUM_CPU_THREAD = 32
 
 
