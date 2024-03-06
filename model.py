@@ -10,11 +10,11 @@ from einops import rearrange, reduce, einsum, repeat
 @dataclass
 class ModelArgs:
     vocab_size: int = 2048
-    d: int = 128  # hidden dim per head
-    h_q: int = 32  # number of query heads
-    h_kv: int = 32  # number of key/value heads
-    s: int = 1024  # maximum sequence length
-    n_layers: int = 32  # number of layers
+    d: int = 48  # hidden dim per head
+    h_q: int = 6  # number of query heads
+    h_kv: int = 6  # number of key/value heads
+    s: int = 256  # maximum sequence length
+    n_layers: int = 5  # number of layers
     norm_eps: float = 1e-5
     dropout: float = 0.125
 
@@ -164,15 +164,18 @@ class Model(nn.Module):
         self.freq_cos = nn.Parameter(freq_cos, requires_grad=False)
         self.freq_sin = nn.Parameter(freq_sin, requires_grad=False)
 
-        self.transformer = Transformer(args, self.freq_cos, self.freq_sin)
-
+        self.transformers = torch.nn.ModuleList(
+            [Transformer(args, self.freq_cos, self.freq_sin) for _ in range(args.n_layers)]
+        )
+ 
     def forward(self, tokens, targets=None):
         assert tokens.ndim == 2
         assert tokens.ndim == 2 if targets is not None else True
         h = self.tok_embeddings(tokens)
         h = self.dropout(h)
 
-        h = self.transformer.forward(h)
+        for transformer in self.transformers:
+            h = transformer(h)
 
         h = self.norm(h)  # b s (hd)
 
@@ -189,5 +192,4 @@ class Model(nn.Module):
             return logits
 
 # to do
-# repeat layer as nn.module
 # train
