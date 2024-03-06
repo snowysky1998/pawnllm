@@ -172,9 +172,9 @@ class Model(nn.Module):
         h = self.tok_embeddings(tokens)
         h = self.dropout(h)
 
-        h_out = self.transformer.forward(h)
+        h = self.transformer.forward(h)
 
-        h = self.norm(h_out)  # b s (hd)
+        h = self.norm(h)  # b s (hd)
 
         if self.train:
             # training: for some desired targets calculate the loss
