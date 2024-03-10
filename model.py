@@ -193,7 +193,3 @@ class Model(nn.Module):
             # inference: only forward the output on the very last position
             logits = self.wvocab(h[:, -1:, :])
             return logits
-
-
-# TODO
-# train
