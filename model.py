@@ -62,14 +62,15 @@ class Transformer(nn.Module):
 
         # ====================== ffn =================================
         ffn_num_features = math.floor(args.h_q * args.d * 8 / 3)
-        ffn_num_features = ((ffn_num_features - 1) // 256) * 256 + 256
+        ffn_num_features = 2**(ffn_num_features.bit_length())
         self.w1 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
         self.w2 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
         self.w3 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)
         self.ffn_dropout = nn.Dropout(args.dropout)
 
     def forward(self, h):
-        # ============================== norm + group-query head attention + residual start ============================
+        assert h.ndim == 3
+        # ============================== norm + attention + residual ============================
         x = self.attention_norm(h)
 
         xq = self.wq(x)
@@ -107,7 +108,9 @@ class Transformer(nn.Module):
         xv = rearrange(xv, "b s h d -> b h s d")
 
         if self.flash:
-            o = F.scaled_dot_product_attention(xq, xk, xv, is_causal=True, dropout_p=self.args.dropout if self.training else 0.0)
+            o = F.scaled_dot_product_attention(
+                xq, xk, xv, is_causal=True, dropout_p=self.args.dropout if self.training else 0.0
+            )
         else:
             score = einsum(xq, xk, "b h_q s_q d, b h_q s_kv d -> b h_q s_q s_kv") / math.sqrt(self.args.d)
             score = score + self.causal_mask
@@ -123,19 +126,16 @@ class Transformer(nn.Module):
 
         # attention residual
         h1 = h + o
-        # ============================== norm + group-query head attention + residual end ==============================
 
-        # ============================== norm + ffn + residual start ===================================================
+        # ============================== norm + ffn + residual ==================================
         x = self.ffn_norm(h1)
-        
+
         # feed forward network (FFN)
         x = F.silu(self.w1(x)) * self.w2(x)  # b s (hd) -> b s num_feature
         x = self.w3(x)  # b s num_feature -> b s (hd)
         o = self.ffn_dropout(x)
 
-        # ffn residual
         h2 = h1 + o  # b s (hd)
-        # ============================== norm + ffn + residual end =====================================================
 
         return h2
 
@@ -167,10 +167,13 @@ class Model(nn.Module):
         self.transformers = torch.nn.ModuleList(
             [Transformer(args, self.freq_cos, self.freq_sin) for _ in range(args.n_layers)]
         )
- 
+
     def forward(self, tokens, targets=None):
         assert tokens.ndim == 2
-        assert tokens.ndim == 2 if targets is not None else True
+        assert tokens.dtype == torch.int64
+        assert targets.ndim == 2 if targets is not None else True
+        assert targets.dtype == torch.int64 if targets is not None else True
+
         h = self.tok_embeddings(tokens)
         h = self.dropout(h)
 
@@ -187,9 +190,10 @@ class Model(nn.Module):
             last_loss = F.cross_entropy(logits, targets, ignore_index=-1)
             return logits, last_loss
         else:
-            # inference-time mini-optimization: only forward the output on the very last position
+            # inference: only forward the output on the very last position
             logits = self.wvocab(h[:, -1:, :])
             return logits
 
-# to do
+
+# TODO
 # train

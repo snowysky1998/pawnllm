@@ -4,8 +4,6 @@ import torch
 from tokenizer import Tokenizer
 from model import Model, ModelArgs
 
-import time
-
 from einops import rearrange
 
 DATA_CACHE_DIR = "./data"
@@ -17,9 +15,11 @@ args = ModelArgs(vocab_size=tokenizer.vocab_size)
 model = Model(args)
 model.cuda()
 
+
 def pad_tokens(tokens, seq_len, pad_token):
-    with torch.no_grad():
-        return torch.nn.functional.pad(tokens, (0, seq_len - tokens.size(-1)), value=pad_token)
+    assert tokens.ndim == 1
+    return torch.nn.functional.pad(tokens, (0, seq_len - tokens.size(-1)), value=pad_token)
+
 
 if __name__ == "__main__":
     tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"), map_location="cuda")
