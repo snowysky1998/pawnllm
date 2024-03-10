@@ -7,8 +7,9 @@ from model import Model, ModelArgs
 from einops import rearrange
 
 DATA_CACHE_DIR = "./data"
+VOCAB_SIZE = 12000
 
-tokenizer = Tokenizer("./data/", "token2048.model")
+tokenizer = Tokenizer("./data/", f"token{VOCAB_SIZE}.model")
 
 args = ModelArgs(vocab_size=tokenizer.vocab_size)
 
@@ -22,11 +23,11 @@ def pad_tokens(tokens, seq_len, pad_token):
 
 
 if __name__ == "__main__":
-    tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"), map_location="cuda")
-    offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"), map_location="cuda")
+    tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
+    offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
 
     first_paragraph = tokens_packed[offsets_packed[0] : offsets_packed[1]]
-    first_paragraph = first_paragraph.long()
+    first_paragraph = first_paragraph.long().cuda()
 
     x = pad_tokens(first_paragraph[:-1], args.s, tokenizer.eos_id)
     y = pad_tokens(first_paragraph[1:], args.s, tokenizer.eos_id)

@@ -1,7 +1,6 @@
 import os
 from sentencepiece import SentencePieceProcessor
 
-
 class Tokenizer:
     def __init__(self, DATA_CACHE_DIR, token_model_name):
         """
@@ -46,5 +45,5 @@ class Tokenizer:
 
 
 if __name__ == "__main__":
-    tokenizer = Tokenizer("./data/", "token2048.model")
+    tokenizer = Tokenizer("./data/", f"token{12000}.model")
     print(tokenizer.encode("Hello world"))

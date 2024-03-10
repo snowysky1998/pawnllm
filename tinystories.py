@@ -12,9 +12,8 @@ warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub"
 
 DATA_CACHE_DIR = "./data"
 
-PARAGRAPH_SIZE = 1000000
 VOCAB_SIZE = 12000
-NUM_CPU_THREAD = 32
+NUM_CPU_THREAD = 4
 
 
 def train_vocab():
@@ -26,7 +25,7 @@ def train_vocab():
     dataset = datasets.load_dataset("roneneldan/TinyStories")
     text = dataset["train"]["text"]
     with open(tiny_file, "w", encoding="utf-8") as of:
-        for paragraph in tqdm(text[:PARAGRAPH_SIZE]):
+        for paragraph in tqdm(text):
             of.write(paragraph + "\n\n")
     print(f"Size is: {os.path.getsize(tiny_file) / 1024 / 1024:.2f} MB")
 
@@ -55,7 +54,7 @@ def train_vocab():
 
 
 def process_paragraph(paragraph_chunk, tqdm_position):
-    tokenizer = Tokenizer("./data/", "token2048.model")
+    tokenizer = Tokenizer("./data/", f"token{VOCAB_SIZE}.model")
     chunk = []
     for paragraph in tqdm(
         paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=None, total=len(paragraph_chunk)
@@ -71,12 +70,12 @@ def pretokenize():
     print(f"Text obtained")
 
     chunk_list = lambda l, n: [l[i : i + n] for i in range(0, len(l), n)]
-    tqdm_position = lambda n: [i for i in range(0, n)]
+    tqdm_position = lambda n: range(0, n)
 
     with ProcessPoolExecutor(max_workers=NUM_CPU_THREAD) as e:
         chunks = e.map(
             process_paragraph,
-            chunk_list(text[:PARAGRAPH_SIZE], PARAGRAPH_SIZE // NUM_CPU_THREAD),
+            chunk_list(text, len(text) // NUM_CPU_THREAD),
             tqdm_position(NUM_CPU_THREAD),
         )
 

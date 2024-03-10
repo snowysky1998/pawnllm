@@ -9,11 +9,11 @@ from einops import rearrange, reduce, einsum, repeat
 
 @dataclass
 class ModelArgs:
-    vocab_size: int = 2048
-    d: int = 48  # hidden dim per head
-    h_q: int = 6  # number of query heads
-    h_kv: int = 6  # number of key/value heads
-    s: int = 256  # maximum sequence length
+    vocab_size: int = 12000
+    d: int = 8  # hidden dim per head
+    h_q: int = 8  # number of query heads
+    h_kv: int = 4  # number of key/value heads
+    s: int = 512  # maximum sequence length
     n_layers: int = 5  # number of layers
     norm_eps: float = 1e-5
     dropout: float = 0.125
