@@ -3,3 +3,4 @@ einops
 numpy
 tqdm
 sentencepiece
+datasets
