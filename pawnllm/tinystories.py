@@ -56,7 +56,7 @@ def train_vocab():
 
 
 def process_paragraph(paragraph_chunk, tqdm_position):
-    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{args.vocab_size}.model")
+    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}.model")
     tokenizer = Tokenizer(tokenizer_path)
     chunk = []
     for paragraph in tqdm(
@@ -99,7 +99,7 @@ def pretokenize1():
 
 
 def pretokenize2(seq_len):
-    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{args.vocab_size}.model")
+    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}.model")
     tokenizer = Tokenizer(tokenizer_path)
     tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
     offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
