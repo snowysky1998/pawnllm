@@ -62,7 +62,7 @@ class Transformer(nn.Module):
 
         # ====================== ffn =================================
         ffn_num_features = math.floor(args.h_q * args.d * 8 / 3)
-        ffn_num_features = 2**(ffn_num_features.bit_length())
+        ffn_num_features = 2 ** (ffn_num_features.bit_length())
         self.w1 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
         self.w2 = nn.Linear(args.h_q * args.d, ffn_num_features, bias=False)
         self.w3 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)

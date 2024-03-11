@@ -1,16 +1,12 @@
 import os
 from sentencepiece import SentencePieceProcessor
 
+
 class Tokenizer:
-    def __init__(self, DATA_CACHE_DIR, token_model_name):
+    def __init__(self, tokenizer_path):
         """
         Tokenizer class constructor
-        input:  DATA_CACHE_DIR : directory of token model file
-                token_model_name : file name of token model file
         """
-        self.DATA_CACHE_DIR = DATA_CACHE_DIR
-        tokenizer_path = os.path.join(DATA_CACHE_DIR, token_model_name)
-
         assert os.path.isfile(tokenizer_path), f"Tokenizer not found at {tokenizer_path}"
 
         self.sp = SentencePieceProcessor(tokenizer_path)
@@ -43,7 +39,23 @@ class Tokenizer:
         """
         return self.sp.decode(encoded_token)
 
+    def list_decode(self, encoded_token:list[int]) -> list[str]:
+        str = []
+        for token in encoded_token:
+            if token == self.bos_id:
+                str.append("<bos>")
+            elif token == self.eos_id:
+                str.append("<eos>")
+            elif token == self.pad_id:
+                str.append("<pad>")
+            else:
+                str.append(self.sp.decode(token))
+        return str
+
 
 if __name__ == "__main__":
     tokenizer = Tokenizer("./data/", f"token{12000}.model")
-    print(tokenizer.encode("Hello world"))
+    tokens = tokenizer.encode("Hello world", bos=True, eos=True, pad=True, seq_len=32)
+    print(tokens)
+    print(tokenizer.decode(tokens))
+    print(tokenizer.sp.EncodeAsPieces("Hello world"))

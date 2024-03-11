@@ -1,60 +1,124 @@
 import os
 import torch
+from dataclasses import dataclass
 
 from tokenizer import Tokenizer
 from model import Model, ModelArgs
 
-from einops import rearrange
 
-DATA_CACHE_DIR = "./data"
-VOCAB_SIZE = 12000
+@dataclass
+class TrainArgs:
+    data_dir: str = "./data"
+    batch_size: int = 128
+    learning_rate: float = 1e-4
+    weight_decay: float = 2e-2
+    checkpoint_steps: int = 10
+    max_steps: int = 30000
 
-tokenizer = Tokenizer("./data/", f"token{VOCAB_SIZE}.model")
 
-args = ModelArgs(vocab_size=tokenizer.vocab_size)
+train_args = TrainArgs()
 
+args = ModelArgs()
 model = Model(args)
 model.cuda()
+model.train()
 model.compile()
 
-def pad_tokens(tokens, seq_len, pad_token):
-    assert tokens.ndim == 1
-    return torch.nn.functional.pad(tokens, (0, seq_len - tokens.size(-1)), value=pad_token)
-
+tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token{args.vocab_size}.model"))
+optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rate, weight_decay=train_args.weight_decay)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
+scaler = torch.cuda.amp.GradScaler()
 
 if __name__ == "__main__":
-    tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
-    offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
+    token_batches = torch.load(os.path.join(train_args.data_dir, f"tiny_batches_s{args.s}.pt"))
+    assert token_batches.ndim == 2
+    num_batches, _ = token_batches.size()
 
-    first_paragraph = tokens_packed[offsets_packed[0] : offsets_packed[1]]
-    first_paragraph = first_paragraph.long().cuda()
+    print(f"{token_batches.size()=}")
+    dataset = torch.utils.data.TensorDataset(token_batches)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=train_args.batch_size, shuffle=True, drop_last=True)
 
-    x = pad_tokens(first_paragraph[:-1], args.s, tokenizer.eos_id)
-    y = pad_tokens(first_paragraph[1:], args.s, tokenizer.eos_id)
+    step_start = 0
+    step_end = train_args.max_steps
 
-    # TODO: change to stack
-    x = rearrange(x, "s -> 1 s")
-    y = rearrange(y, "s -> 1 s")
+    for step in range(step_start, step_end):
 
-    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-        o, loss = model(x, y)
+        count = 0
 
-    print(f"{o=}")
-    print(f"{o.dtype=}")
-    print(f"{o.size()=}")
-    print(f"{loss=}")
-    print(f"{loss.dtype=}")
-    print(f"{loss.size()=}")
+        for batch, in dataloader:
+            optimizer.zero_grad()
 
-    first_paragraph_str = tokenizer.decode(first_paragraph.tolist())
-    print(f"{first_paragraph_str=}")
-    # print(f"{first_paragraph=}")
-    # print(f"{len(first_paragraph)=}")
-    # print(f"{tokens_packed=}")
-    # print(f"{tokens_packed.max()=}")
-    # print(f"{offsets_packed=}")
-    # print(f"{offsets_packed.max()=}")
+            batch = batch.long().cuda()
+            x = batch[:, :-1]
+            y = batch[:, 1:]
 
+            with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                o, loss = model(x, y)
+            
+            loss = scaler.scale(loss)
+            loss.backward()
+
+            optimizer.step()
+
+            print(f"{count}\t:loss={loss.item()}")
+
+            count += 1
+
+            if count == 5000:
+                torch.save(o, "output.pt")
+                break
+
+        scheduler.step()
+
+        break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# print(f"{o=}")
+# print(f"{o.dtype=}")
+# print(f"{o.size()=}")
+# print(f"{loss=}")
+# print(f"{loss.dtype=}")
+# print(f"{loss.size()=}")
+
+# first_paragraph = batch[0, :]
+# first_paragraph_str = tokenizer.decode(first_paragraph.tolist())
+# print(f"{first_paragraph=}")
+# print(f"{first_paragraph_str=}")
+# print(f"{len(first_paragraph)=}")
 
 # TODO
 # train
@@ -64,3 +128,6 @@ if __name__ == "__main__":
 # - training loop checkpoint code, and logging
 # - hyperparameter tuning
 # - perplexity analysis (how close are the tokens?)
+
+# - what do you do if the model doesn't converge?
+# https://developers.google.com/machine-learning/testing-debugging/metrics/interpretic

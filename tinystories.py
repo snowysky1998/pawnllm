@@ -31,9 +31,13 @@ def train_vocab():
 
     spm.SentencePieceTrainer.train(
         input=tiny_file,
-        model_prefix=prefix,
-        model_type="bpe",
         vocab_size=VOCAB_SIZE,
+        model_type="bpe",
+        model_prefix=prefix,
+        pad_id=0,
+        bos_id=1,
+        eos_id=2,
+        unk_id=3,
         self_test_sample_size=0,
         input_format="text",
         character_coverage=1.0,
@@ -41,8 +45,6 @@ def train_vocab():
         split_digits=True,
         allow_whitespace_only_pieces=True,
         byte_fallback=True,
-        unk_surface=r" \342\201\207 ",
-        normalization_rule_name="identity",
     )
 
     print(f"Trained tokenizer is in {prefix}.model")
@@ -60,14 +62,16 @@ def process_paragraph(paragraph_chunk, tqdm_position):
         paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=None, total=len(paragraph_chunk)
     ):
         paragraph = paragraph.replace("\n\n", "")
-        chunk.append(tokenizer.encode(paragraph))
+        chunk.append(tokenizer.encode(paragraph, bos=True, eos=True))
     return chunk
 
 
-def pretokenize():
+def pretokenize1():
     dataset = datasets.load_dataset("roneneldan/TinyStories")
     text = dataset["train"]["text"]
     print(f"Text obtained")
+
+    text = text[: len(text) // 2]
 
     chunk_list = lambda l, n: [l[i : i + n] for i in range(0, len(l), n)]
     tqdm_position = lambda n: range(0, n)
@@ -93,14 +97,57 @@ def pretokenize():
     print(f"Done")
 
 
+def pretokenize2(seq_len):
+    tokenizer = Tokenizer("./data/", f"token{VOCAB_SIZE}.model")
+    tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
+    offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
+    print("loaded packed tensors")
+
+    def pad_tokens(tokens, seq_len, pad_token):
+        assert tokens.ndim == 1
+        assert seq_len >= tokens.size(-1)
+        return torch.nn.functional.pad(tokens, (0, seq_len - tokens.size(-1)), value=pad_token)
+
+    num_batches = len(offsets_packed) - 1
+
+    batches = torch.empty(num_batches, seq_len + 1, dtype=torch.short)
+
+    num_batches_sliced = 0
+    num_batches_padded = 0
+
+    for b in tqdm(range(num_batches)):
+        paragraph = tokens_packed[offsets_packed[b] : offsets_packed[b + 1]]
+        if seq_len < paragraph.size(-1):
+            num_batches_sliced += 1
+            batches[b, :] = paragraph[:seq_len+1].short()
+        else:
+            num_batches_padded += 1
+            batches[b, :] = pad_tokens(paragraph, seq_len + 1, tokenizer.pad_id).short()
+
+    print(f"{num_batches_sliced=}")
+    print(f"{num_batches_padded=}")
+
+    print(f"{batches.size()=}")
+    print(f"{batches.dtype=}")
+    torch.save(batches, os.path.join(DATA_CACHE_DIR, f"tiny_batches_s{seq_len}.pt"))
+    print("saved padded tensors as batches")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("stage", type=str, choices=["train_vocab", "pretokenize"])
+    parser.add_argument("stage", type=str, choices=["all", "train_vocab", "pretokenize1", "pretokenize2"])
+    parser.add_argument("--seq_len", type=int, default=512)
     args = parser.parse_args()
 
-    if args.stage == "train_vocab":
+    if args.stage == "all":
         train_vocab()
-    elif args.stage == "pretokenize":
-        pretokenize()
+        pretokenize1()
+        pretokenize2(args.seq_len)
+    elif args.stage == "train_vocab":
+        train_vocab()
+    elif args.stage == "pretokenize1":
+        pretokenize1()
+    elif args.stage == "pretokenize2":
+        pretokenize2(args.seq_len)
     else:
         raise ValueError(f"Unknown stage {args.stage}")
