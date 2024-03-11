@@ -3,17 +3,10 @@ import torch
 from dataclasses import dataclass
 
 from tokenizer import Tokenizer
-from model import Model, ModelArgs
+from model import Model
+from config import ModelArgs, TrainArgs
 
 
-@dataclass
-class TrainArgs:
-    data_dir: str = "./data"
-    batch_size: int = 128
-    learning_rate: float = 1e-4
-    weight_decay: float = 2e-2
-    checkpoint_steps: int = 10
-    max_steps: int = 30000
 
 
 train_args = TrainArgs()
@@ -64,7 +57,7 @@ if __name__ == "__main__":
 
             count += 1
 
-            if count == 5000:
+            if count == 4000:
                 torch.save(o, "output.pt")
                 break
 

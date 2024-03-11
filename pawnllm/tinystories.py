@@ -10,7 +10,7 @@ import argparse
 
 warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
 
-DATA_CACHE_DIR = "./data"
+DATA_CACHE_DIR = "../data"
 
 VOCAB_SIZE = 12000
 NUM_CPU_THREAD = 4

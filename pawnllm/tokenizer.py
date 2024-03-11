@@ -54,7 +54,7 @@ class Tokenizer:
 
 
 if __name__ == "__main__":
-    tokenizer = Tokenizer("./data/", f"token{12000}.model")
+    tokenizer = Tokenizer(f"./data/token{12000}.model")
     tokens = tokenizer.encode("Hello world", bos=True, eos=True, pad=True, seq_len=32)
     print(tokens)
     print(tokenizer.decode(tokens))

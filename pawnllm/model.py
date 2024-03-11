@@ -2,21 +2,12 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 import math
-
 from dataclasses import dataclass
+
 from einops import rearrange, reduce, einsum, repeat
 
 
-@dataclass
-class ModelArgs:
-    vocab_size: int = 12000
-    d: int = 8  # hidden dim per head
-    h_q: int = 8  # number of query heads
-    h_kv: int = 4  # number of key/value heads
-    s: int = 512  # maximum sequence length
-    n_layers: int = 5  # number of layers
-    norm_eps: float = 1e-5
-    dropout: float = 0.125
+
 
 
 class RMSNorm(nn.Module):
@@ -149,7 +140,7 @@ class Model(nn.Module):
         self.norm = RMSNorm(args.h_q * args.d, eps=args.norm_eps)
         self.wvocab = nn.Linear(args.h_q * args.d, args.vocab_size, bias=False)
 
-        # cis means "cos(x) + i * sine(x)"
+        # cis means "cos(x) + i * sin(x)"
         def precompute_freqs_cis(d, s, theta=10000.0):
             assert d % 2 == 0
             freqs = torch.arange(0, d, 2).float() / d
