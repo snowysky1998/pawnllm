@@ -17,6 +17,7 @@ NUM_CPU_THREAD = 4
 
 
 def train_vocab():
+    print(f"train_vocab...")
     os.makedirs(DATA_CACHE_DIR, exist_ok=True)
     tiny_file = os.path.join(DATA_CACHE_DIR, "tiny.txt")
     prefix = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}")
@@ -68,6 +69,7 @@ def process_paragraph(paragraph_chunk, tqdm_position):
 
 
 def pretokenize1():
+    print(f"pretokenize1...")
     dataset = datasets.load_dataset("roneneldan/TinyStories")
     text = dataset["train"]["text"]
     print(f"Text obtained")
@@ -84,7 +86,7 @@ def pretokenize1():
             tqdm_position(NUM_CPU_THREAD),
         )
 
-    os.system("clear")
+    # os.system("clear")
     print(f"Encoding done")
 
     tokens_list = [tokens for chunk in chunks for tokens in chunk]
@@ -99,6 +101,7 @@ def pretokenize1():
 
 
 def pretokenize2(seq_len):
+    print(f"pretokenize2...")
     tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}.model")
     tokenizer = Tokenizer(tokenizer_path)
     tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))

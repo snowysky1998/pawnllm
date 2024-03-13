@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from tokenizer import Tokenizer
 from model import Model
 from config import ModelArgs, TrainArgs
-
+from tqdm import tqdm
 
 
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         count = 0
 
-        for batch, in dataloader:
+        for batch, in tqdm(dataloader, total=len(dataloader), desc=f"step:{step}", leave=False):
             optimizer.zero_grad()
 
             batch = batch.long().cuda()
@@ -53,17 +53,22 @@ if __name__ == "__main__":
 
             optimizer.step()
 
-            print(f"{count}\t:loss={loss.item()}")
+            # print(f"{count}\t:loss={loss.item()}")
 
             count += 1
 
-            if count == 4000:
-                torch.save(o, "output.pt")
-                break
-
+            # if count == 4000:
+            #     torch.save(o, "output.pt")
+            #     break
+        print(f"step:{step}\tfinal loss={loss.item()}")
         scheduler.step()
 
-        break
+        # DEBUG
+        if step == 10:
+            torch.save(o, "output.pt")
+            break
+
+        # break
 
 
 
