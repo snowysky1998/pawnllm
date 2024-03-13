@@ -6,6 +6,7 @@ from tokenizer import Tokenizer
 from model import Model
 from config import ModelArgs, TrainArgs
 from tqdm import tqdm
+import argparse
 
 
 
@@ -22,7 +23,38 @@ optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rat
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
 scaler = torch.cuda.amp.GradScaler()
 
+checkpoint_path = os.path.join(train_args.data_dir, "checkpoint.tar")
+
 if __name__ == "__main__":
+    parser =  argparse.ArgumentParser()
+    parser.add_argument("-c", "--checkpoint", help="start training form checkpoint", action="store_true")
+    parser_args = parser.parse_args()
+
+    if parser_args.checkpoint:
+        # train from checkpoint
+        print(f"Training from checkpoint")
+        print(f"Loading checkpoint")
+        assert os.path.isfile(checkpoint_path) ,f"Checkpoint not found at {checkpoint_path}"
+        print(f"Checkpoint found")
+        checkpoint = torch.load(checkpoint_path)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        step_start = checkpoint["epoch"] + 1
+        loss = checkpoint["loss"]
+        
+        model.train()
+        model.compile()
+        print(f"Loading checkpoint done")
+        print(f"Checkpoint final_loss={loss.item()}")
+        print(f"Training start from step={step_start}")
+    else:
+        # train from zero
+        print(f"Training from zero")
+        step_start = 0
+        print(f"Training start from step={step_start}")
+
+    print(f"Loading dataset")
     token_batches = torch.load(os.path.join(train_args.data_dir, f"tiny_batches_s{args.s}.pt"))
     assert token_batches.ndim == 2
     num_batches, _ = token_batches.size()
@@ -31,13 +63,9 @@ if __name__ == "__main__":
     dataset = torch.utils.data.TensorDataset(token_batches)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=train_args.batch_size, shuffle=True, drop_last=True)
 
-    step_start = 0
     step_end = train_args.max_steps
-
+    print(f"Train start")
     for step in range(step_start, step_end):
-
-        count = 0
-
         for batch, in tqdm(dataloader, total=len(dataloader), desc=f"step:{step}", leave=False):
             optimizer.zero_grad()
 
@@ -54,19 +82,23 @@ if __name__ == "__main__":
             optimizer.step()
 
             # print(f"{count}\t:loss={loss.item()}")
-
-            count += 1
-
-            # if count == 4000:
-            #     torch.save(o, "output.pt")
-            #     break
-        print(f"step:{step}\tfinal loss={loss.item()}")
+        print(f"step:{step}\tfinal_loss={loss.item()}")
         scheduler.step()
 
-        # DEBUG
-        if step == 10:
+        # checkpoint
+        if (step + 1) % train_args.checkpoint_steps == 0:
+            print(f"Saving checkpoint")
+            # saving model data
+            torch.save({
+                "epoch": step,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "scheduler_state_dict": scheduler.state_dict(),
+                "loss": loss,
+            }, checkpoint_path)
+            # saving output?
             torch.save(o, "output.pt")
-            break
+            # break
 
         # break
 
