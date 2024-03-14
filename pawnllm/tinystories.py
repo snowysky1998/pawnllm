@@ -85,7 +85,7 @@ def pretokenize1():
         )
 
     # os.system("clear")
-    print(f"Encoding done")
+    print(f"\n\nEncoding done")
 
     tokens_list = [tokens for chunk in chunks for tokens in chunk]
 
