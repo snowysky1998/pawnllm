@@ -7,20 +7,18 @@ from tokenizer import Tokenizer
 from concurrent.futures import ProcessPoolExecutor
 import torch
 import argparse
+from config import TokenArgs
+
+token_args = TokenArgs()
 
 warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
-
-DATA_CACHE_DIR = "../data"
-
-VOCAB_SIZE = 12000
-NUM_CPU_THREAD = 4
 
 
 def train_vocab():
     print(f"train_vocab...")
-    os.makedirs(DATA_CACHE_DIR, exist_ok=True)
-    tiny_file = os.path.join(DATA_CACHE_DIR, "tiny.txt")
-    prefix = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}")
+    os.makedirs(token_args.data_dir, exist_ok=True)
+    tiny_file = os.path.join(token_args.data_dir, "tiny.txt")
+    prefix = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}")
 
     print(f"Writing temporary file {tiny_file}")
     dataset = datasets.load_dataset("roneneldan/TinyStories")
@@ -32,7 +30,7 @@ def train_vocab():
 
     spm.SentencePieceTrainer.train(
         input=tiny_file,
-        vocab_size=VOCAB_SIZE,
+        vocab_size=token_args.vocab_size,
         model_type="bpe",
         model_prefix=prefix,
         pad_id=0,
@@ -57,7 +55,7 @@ def train_vocab():
 
 
 def process_paragraph(paragraph_chunk, tqdm_position):
-    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}.model")
+    tokenizer_path = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}.model")
     tokenizer = Tokenizer(tokenizer_path)
     chunk = []
     for paragraph in tqdm(
@@ -79,11 +77,11 @@ def pretokenize1():
     chunk_list = lambda l, n: [l[i : i + n] for i in range(0, len(l), n)]
     tqdm_position = lambda n: range(0, n)
 
-    with ProcessPoolExecutor(max_workers=NUM_CPU_THREAD) as e:
+    with ProcessPoolExecutor(max_workers=token_args.num_cpu_thread) as e:
         chunks = e.map(
             process_paragraph,
-            chunk_list(text, len(text) // NUM_CPU_THREAD),
-            tqdm_position(NUM_CPU_THREAD),
+            chunk_list(text, len(text) // token_args.num_cpu_thread),
+            tqdm_position(token_args.num_cpu_thread),
         )
 
     # os.system("clear")
@@ -95,17 +93,17 @@ def pretokenize1():
     offsets_packed = torch.cumsum(torch.tensor([0] + [len(tokens) for tokens in tokens_list]), dim=0).int()
 
     print(f"Saving tokens as binary files(.pt)")
-    torch.save(tokens_packed, os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
-    torch.save(offsets_packed, os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
+    torch.save(tokens_packed, os.path.join(token_args.data_dir, "tiny_tokens.pt"))
+    torch.save(offsets_packed, os.path.join(token_args.data_dir, "tiny_offsets.pt"))
     print(f"Done")
 
 
 def pretokenize2(seq_len):
     print(f"pretokenize2...")
-    tokenizer_path = os.path.join(DATA_CACHE_DIR, f"token{VOCAB_SIZE}.model")
+    tokenizer_path = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}.model")
     tokenizer = Tokenizer(tokenizer_path)
-    tokens_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_tokens.pt"))
-    offsets_packed = torch.load(os.path.join(DATA_CACHE_DIR, "tiny_offsets.pt"))
+    tokens_packed = torch.load(os.path.join(token_args.data_dir, "tiny_tokens.pt"))
+    offsets_packed = torch.load(os.path.join(token_args.data_dir, "tiny_offsets.pt"))
     print("loaded packed tensors")
 
     def pad_tokens(tokens, seq_len, pad_token):
@@ -134,14 +132,14 @@ def pretokenize2(seq_len):
 
     print(f"{batches.size()=}")
     print(f"{batches.dtype=}")
-    torch.save(batches, os.path.join(DATA_CACHE_DIR, f"tiny_batches_s{seq_len}.pt"))
+    torch.save(batches, os.path.join(token_args.data_dir, f"tiny_batches_s{seq_len}.pt"))
     print("saved padded tensors as batches")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("stage", type=str, choices=["all", "train_vocab", "pretokenize1", "pretokenize2"])
-    parser.add_argument("--seq_len", type=int, default=512)
+    parser.add_argument("--seq_len", type=int, default=token_args.default_seq_len)
     args = parser.parse_args()
 
     if args.stage == "all":

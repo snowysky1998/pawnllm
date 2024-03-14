@@ -19,3 +19,10 @@ class TrainArgs:
     weight_decay: float = 2e-2
     checkpoint_steps: int = 10
     max_steps: int = 30000
+
+@dataclass
+class TokenArgs:
+    data_dir: str = "../data"
+    vocab_size: int = 12000
+    num_cpu_thread: int = 8
+    default_seq_len: int = 512
