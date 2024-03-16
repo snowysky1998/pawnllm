@@ -1,6 +1,5 @@
 import os
 import torch
-from dataclasses import dataclass
 
 from tokenizer import Tokenizer
 from model import Model
@@ -8,65 +7,56 @@ from config import ModelArgs, TrainArgs
 from tqdm import tqdm
 import argparse
 
+from logger import discord_log
+
+def load_checkpoint(checkpoint_path, model, optimizer, scheduler):
+    print(f"Loading checkpoint")
+
+    assert os.path.isfile(checkpoint_path) ,f"Checkpoint not found at {checkpoint_path}"
+    checkpoint = torch.load(checkpoint_path)
+    model.load_state_dict(checkpoint["model_state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+    scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+    return checkpoint["epoch"] + 1
 
 
-train_args = TrainArgs()
+def main(checkpoint):
+    step_start = 1
 
-args = ModelArgs()
-model = Model(args)
-model.cuda()
-model.train()
-model.compile()
+    train_args = TrainArgs()
+    args = ModelArgs()
 
-tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token{args.vocab_size}.model"))
-optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rate, weight_decay=train_args.weight_decay)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
-scaler = torch.cuda.amp.GradScaler()
+    model = Model(args)
+    tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token{args.vocab_size}.model"))
+    optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rate, weight_decay=train_args.weight_decay)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
+    scaler = torch.cuda.amp.GradScaler()
 
-checkpoint_path = os.path.join(train_args.data_dir, "checkpoint.tar")
+    if checkpoint:
+        step_start = load_checkpoint(os.path.join(train_args.data_dir, checkpoint), model, optimizer, scheduler)
 
-if __name__ == "__main__":
-    parser =  argparse.ArgumentParser()
-    parser.add_argument("-c", "--checkpoint", help="start training form checkpoint", action="store_true")
-    parser_args = parser.parse_args()
+    model.train()
+    model.cuda()
+    model.compile()
 
-    if parser_args.checkpoint:
-        # train from checkpoint
-        print(f"Training from checkpoint")
-        print(f"Loading checkpoint")
-        assert os.path.isfile(checkpoint_path) ,f"Checkpoint not found at {checkpoint_path}"
-        print(f"Checkpoint found")
-        checkpoint = torch.load(checkpoint_path)
-        model.load_state_dict(checkpoint["model_state_dict"])
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
-        step_start = checkpoint["epoch"] + 1
-        loss = checkpoint["loss"]
-        
-        model.train()
-        model.compile()
-        print(f"Loading checkpoint done")
-        print(f"Checkpoint final_loss={loss.item()}")
-        print(f"Training start from step={step_start}")
-    else:
-        # train from zero
-        print(f"Training from zero")
-        step_start = 0
-        print(f"Training start from step={step_start}")
+    print(f"{step_start=}")
 
     print(f"Loading dataset")
     token_batches = torch.load(os.path.join(train_args.data_dir, f"tiny_batches_s{args.s}.pt"))
     assert token_batches.ndim == 2
     num_batches, _ = token_batches.size()
-
     print(f"{token_batches.size()=}")
+    token_batches = token_batches[:1024*128, :]
+    print(f"{token_batches.size()=}")
+
     dataset = torch.utils.data.TensorDataset(token_batches)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=train_args.batch_size, shuffle=True, drop_last=True)
 
-    step_end = train_args.max_steps
-    print(f"Train start")
-    for step in range(step_start, step_end):
-        for batch, in tqdm(dataloader, total=len(dataloader), desc=f"step:{step}", leave=False):
+    for step in range(step_start, train_args.max_steps + 1):
+        print(f"Starting {step=}")
+
+        total_loss = torch.tensor(0.0)
+        for batch, in tqdm(dataloader, total=len(dataloader), desc=f"{step=}", leave=False):
             optimizer.zero_grad()
 
             batch = batch.long().cuda()
@@ -75,67 +65,49 @@ if __name__ == "__main__":
 
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                 o, loss = model(x, y)
-            
+
+            total_loss += loss.cpu().detach().clone()
+
             loss = scaler.scale(loss)
             loss.backward()
+            scaler.step(optimizer)
+            scaler.update()
 
-            optimizer.step()
+        avg_loss = total_loss.item() / len(dataloader)
+        print(f"{step=} {avg_loss=}")
 
-            # print(f"{count}\t:loss={loss.item()}")
-        print(f"step:{step}\tfinal_loss={loss.item()}")
         scheduler.step()
 
         # checkpoint
-        if (step + 1) % train_args.checkpoint_steps == 0:
-            print(f"Saving checkpoint")
-            # saving model data
+        if step % train_args.checkpoint_steps == 0:
+            discord_log(f"```{step=} {avg_loss=:.4f}```")
             torch.save({
                 "epoch": step,
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "scheduler_state_dict": scheduler.state_dict(),
-                "loss": loss,
-            }, checkpoint_path)
-            # saving output?
-            torch.save(o, "output.pt")
-            # break
-
-        # break
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# print(f"{o=}")
-# print(f"{o.dtype=}")
-# print(f"{o.size()=}")
-# print(f"{loss=}")
-# print(f"{loss.dtype=}")
-# print(f"{loss.size()=}")
-
-# first_paragraph = batch[0, :]
-# first_paragraph_str = tokenizer.decode(first_paragraph.tolist())
-# print(f"{first_paragraph=}")
-# print(f"{first_paragraph_str=}")
-# print(f"{len(first_paragraph)=}")
+            }, os.path.join(train_args.data_dir, f"checkpoint{step}.pt"))
 
 # TODO
 # train
-# - shuffle and batch paragraphs, and split eval and validation
+# - split eval and validation
 # - write model eval and validation
-# - loss function, backward optimizer, gradient, improve mixed precision
-# - training loop checkpoint code, and logging
-# - hyperparameter tuning
 # - perplexity analysis (how close are the tokens?)
+# - early termination
 
-# - what do you do if the model doesn't converge?
-# https://developers.google.com/machine-learning/testing-debugging/metrics/interpretic
+# DONE
+# - hyperparameter tuning
+# - loss function, backward optimizer, gradient, improve mixed precision
+# - shuffle and batch paragraphs
+# - training loop checkpoint code, and logging
+
+# TODO
+# args
+# data_dir
+if __name__ == "__main__":
+    parser =  argparse.ArgumentParser()
+    parser.add_argument("-c", "--checkpoint", default=None, help="checkpoint path", type=str)
+    parser_args = parser.parse_args()
+
+    main(parser_args.checkpoint)
+

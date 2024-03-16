@@ -13,7 +13,7 @@ class ModelArgs:
 
 @dataclass
 class TrainArgs:
-    data_dir: str = "../data"
+    data_dir: str = "./data"
     batch_size: int = 128
     learning_rate: float = 1e-4
     weight_decay: float = 2e-2
@@ -22,7 +22,7 @@ class TrainArgs:
 
 @dataclass
 class TokenArgs:
-    data_dir: str = "../data"
+    data_dir: str = "./data"
     vocab_size: int = 12000
-    num_cpu_thread: int = 8
+    num_cpu_thread: int = 8 # number of cpu thread used in pretokenize
     default_seq_len: int = 512

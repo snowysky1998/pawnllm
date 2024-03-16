@@ -173,7 +173,7 @@ class Model(nn.Module):
 
         h = self.norm(h)  # b s (hd)
 
-        if self.train:
+        if self.training:
             # training: for some desired targets calculate the loss
             logits = self.wvocab(h)
             logits = rearrange(logits, "b s vocab_size -> (b s) vocab_size")

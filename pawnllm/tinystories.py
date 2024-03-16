@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub"
 
 
 def train_vocab():
-    print(f"train_vocab...")
+    print(f"stage: train_vocab")
     os.makedirs(token_args.data_dir, exist_ok=True)
     tiny_file = os.path.join(token_args.data_dir, "tiny.txt")
     prefix = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}")
@@ -59,7 +59,7 @@ def process_paragraph(paragraph_chunk, tqdm_position):
     tokenizer = Tokenizer(tokenizer_path)
     chunk = []
     for paragraph in tqdm(
-        paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=None, total=len(paragraph_chunk)
+        paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=False, total=len(paragraph_chunk)
     ):
         paragraph = paragraph.replace("\n\n", "")
         chunk.append(tokenizer.encode(paragraph, bos=True, eos=True))
@@ -67,7 +67,7 @@ def process_paragraph(paragraph_chunk, tqdm_position):
 
 
 def pretokenize1():
-    print(f"pretokenize1...")
+    print(f"stage: pretokenize1")
     dataset = datasets.load_dataset("roneneldan/TinyStories")
     text = dataset["train"]["text"]
     print(f"Text obtained")
@@ -85,7 +85,7 @@ def pretokenize1():
         )
 
     # os.system("clear")
-    print(f"\n\nEncoding done")
+    print(f"\nEncoding done")
 
     tokens_list = [tokens for chunk in chunks for tokens in chunk]
 
@@ -99,7 +99,7 @@ def pretokenize1():
 
 
 def pretokenize2(seq_len):
-    print(f"pretokenize2...")
+    print(f"stage: pretokenize2")
     tokenizer_path = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}.model")
     tokenizer = Tokenizer(tokenizer_path)
     tokens_packed = torch.load(os.path.join(token_args.data_dir, "tiny_tokens.pt"))
