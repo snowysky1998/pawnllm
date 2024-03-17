@@ -35,7 +35,7 @@ def main(checkpoint):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rate, weight_decay=train_args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
-    scaler = torch.cuda.amp.GradScaler(init_scale=2**6, growth_interval=400)
+    scaler = torch.cuda.amp.GradScaler(init_scale=train_args.grad_init_scale, growth_interval=train_args.grad_growth_steps)
 
     step_start = 1
     if checkpoint:
