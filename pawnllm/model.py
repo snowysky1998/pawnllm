@@ -174,5 +174,5 @@ class Model(nn.Module):
             return logits, last_loss
         else:
             # inference: only forward the output on the very last position
-            logits = self.wvocab(h[:, -1:, :])
+            logits = self.wvocab(h)
             return logits
