@@ -39,15 +39,18 @@ class Tokenizer:
         """
         return self.sp.decode(encoded_token)
 
-    def list_decode(self, encoded_token: list[int]) -> list[str]:
+    def list_decode(self, encoded_token: list[int], print_bos=True, print_eos=True, print_pad=False) -> list[str]:
         str = []
         for token in encoded_token:
             if token == self.bos_id:
-                str.append("<bos>")
+                if print_bos:
+                    str.append("<bos>")
             elif token == self.eos_id:
-                str.append("<eos>")
+                if print_eos:
+                    str.append("<eos>")
             elif token == self.pad_id:
-                str.append("<pad>")
+                if print_pad:
+                    str.append("<pad>")
             else:
                 str.append(self.sp.decode(token))
         return str

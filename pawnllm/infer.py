@@ -20,16 +20,34 @@ def main(checkpoint, prompt):
     model.cuda()
     tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token12000.model"))
 
-    # without prompt
     x = torch.full((1, args.s), tokenizer.pad_id)
-    x[0, 0] = tokenizer.bos_id
+
+    if prompt == None:
+        # without prompt
+        x[0, 0] = tokenizer.bos_id
+        infer_start = 1
+        
+    else:
+        prompt_token = torch.Tensor(tokenizer.encode(prompt, bos=False))
+        # print(f"{prompt_token.size()=}")
+        # print(f"{prompt_token=}")
+        prompt_token = rearrange(prompt_token, "len -> 1 len")
+        x[:,:prompt_token.size(dim=-1)] = prompt_token
+        infer_start = prompt_token.size(dim=-1)
+
+        # print(f"{x.size()=}")
+        # print(f"{x=}")
+
+
     x = x.long().cuda()
 
-    for s in range(1, args.s):
+    for s in range(infer_start, args.s):
         y = model(x)
         y = y.argmax(axis=-1)
         x[:, s] = y[:, s - 1]
-
+    
+    x = rearrange(x, "1 s -> s")
+    print(tokenizer.list_decode(x.tolist()))
     print(tokenizer.decode(x.tolist()))
 
 
