@@ -39,7 +39,7 @@ class Tokenizer:
         """
         return self.sp.decode(encoded_token)
 
-    def list_decode(self, encoded_token:list[int]) -> list[str]:
+    def list_decode(self, encoded_token: list[int]) -> list[str]:
         str = []
         for token in encoded_token:
             if token == self.bos_id:

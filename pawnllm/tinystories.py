@@ -58,9 +58,7 @@ def process_paragraph(paragraph_chunk, tqdm_position):
     tokenizer_path = os.path.join(token_args.data_dir, f"token{token_args.vocab_size}.model")
     tokenizer = Tokenizer(tokenizer_path)
     chunk = []
-    for paragraph in tqdm(
-        paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=False, total=len(paragraph_chunk)
-    ):
+    for paragraph in tqdm(paragraph_chunk, position=tqdm_position, desc=f"{tqdm_position:2d}core", leave=False, total=len(paragraph_chunk)):
         paragraph = paragraph.replace("\n\n", "")
         chunk.append(tokenizer.encode(paragraph, bos=True, eos=True))
     return chunk
@@ -122,7 +120,7 @@ def pretokenize2(seq_len):
         paragraph = tokens_packed[offsets_packed[b] : offsets_packed[b + 1]]
         if seq_len < paragraph.size(-1):
             num_batches_sliced += 1
-            batches[b, :] = paragraph[:seq_len+1].short()
+            batches[b, :] = paragraph[: seq_len + 1].short()
         else:
             num_batches_padded += 1
             batches[b, :] = pad_tokens(paragraph, seq_len + 1, tokenizer.pad_id).short()
@@ -138,7 +136,7 @@ def pretokenize2(seq_len):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("stage", type=str, choices=["all", "train_vocab", "pretokenize1", "pretokenize2"])
+    parser.add_argument("--stage", type=str, default="all", choices=["all", "train_vocab", "pretokenize1", "pretokenize2"])
     parser.add_argument("--seq_len", type=int, default=token_args.default_seq_len)
     args = parser.parse_args()
 

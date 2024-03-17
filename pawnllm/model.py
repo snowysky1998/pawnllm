@@ -7,9 +7,6 @@ from dataclasses import dataclass
 from einops import rearrange, reduce, einsum, repeat
 
 
-
-
-
 class RMSNorm(nn.Module):
     def __init__(self, dim, eps):
         super().__init__()
@@ -99,9 +96,7 @@ class Transformer(nn.Module):
         xv = rearrange(xv, "b s h d -> b h s d")
 
         if self.flash:
-            o = F.scaled_dot_product_attention(
-                xq, xk, xv, is_causal=True, dropout_p=self.args.dropout if self.training else 0.0
-            )
+            o = F.scaled_dot_product_attention(xq, xk, xv, is_causal=True, dropout_p=self.args.dropout if self.training else 0.0)
         else:
             score = einsum(xq, xk, "b h_q s_q d, b h_q s_kv d -> b h_q s_q s_kv") / math.sqrt(self.args.d)
             score = score + self.causal_mask
@@ -155,9 +150,7 @@ class Model(nn.Module):
         self.freq_cos = nn.Parameter(freq_cos, requires_grad=False)
         self.freq_sin = nn.Parameter(freq_sin, requires_grad=False)
 
-        self.transformers = torch.nn.ModuleList(
-            [Transformer(args, self.freq_cos, self.freq_sin) for _ in range(args.n_layers)]
-        )
+        self.transformers = torch.nn.ModuleList([Transformer(args, self.freq_cos, self.freq_sin) for _ in range(args.n_layers)])
 
     def forward(self, tokens, targets=None):
         assert tokens.ndim == 2

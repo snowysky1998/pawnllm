@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class ModelArgs:
     vocab_size: int = 12000
@@ -11,18 +12,20 @@ class ModelArgs:
     norm_eps: float = 1e-5
     dropout: float = 0.125
 
+
 @dataclass
 class TrainArgs:
     data_dir: str = "./data"
     batch_size: int = 128
     learning_rate: float = 1e-4
     weight_decay: float = 2e-2
-    checkpoint_steps: int = 10
+    checkpoint_steps: int = 1
     max_steps: int = 30000
+
 
 @dataclass
 class TokenArgs:
     data_dir: str = "./data"
     vocab_size: int = 12000
-    num_cpu_thread: int = 8 # number of cpu thread used in pretokenize
+    num_cpu_thread: int = 8  # number of cpu thread used in pretokenize
     default_seq_len: int = 512

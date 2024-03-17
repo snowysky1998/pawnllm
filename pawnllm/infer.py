@@ -8,8 +8,8 @@ from model import Model
 train_args = TrainArgs()
 args = ModelArgs
 model = Model(args)
-checkpoint_path = os.path.join(train_args.data_dir,"checkpoint10.pt")
-assert os.path.isfile(checkpoint_path) ,f"Checkpoint not found at {checkpoint_path}"
+checkpoint_path = os.path.join(train_args.data_dir, "checkpoint10.pt")
+assert os.path.isfile(checkpoint_path), f"Checkpoint not found at {checkpoint_path}"
 checkpoint = torch.load(checkpoint_path)
 model.load_state_dict(checkpoint["model_state_dict"])
 model.eval()
@@ -37,5 +37,3 @@ for s in range(1, args.s):
 # print(o_paragraph.size())
 
 # print(tokenizer.decode(o_paragraph.tolist()))
-
-
