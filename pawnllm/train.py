@@ -9,6 +9,9 @@ from model import Model
 from config import ModelArgs, TrainArgs
 from logger import discord_log
 
+train_args = TrainArgs()
+args = ModelArgs()
+
 
 def load_checkpoint(checkpoint_path, model, optimizer, scheduler):
     print(f"Loading checkpoint")
@@ -16,28 +19,27 @@ def load_checkpoint(checkpoint_path, model, optimizer, scheduler):
     assert os.path.isfile(checkpoint_path), f"Checkpoint not found at {checkpoint_path}"
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint["model_state_dict"])
+    model.train()
+    model.cuda()
+    model.compile()
     optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
     scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
     return checkpoint["epoch"] + 1
 
 
 def main(checkpoint):
-    train_args = TrainArgs()
-    args = ModelArgs()
-
     model = Model(args)
-    tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token{args.vocab_size}.model"))
+    model.train()
+    model.cuda()
+    model.compile()
+
     optimizer = torch.optim.Adam(model.parameters(), lr=10 * train_args.learning_rate, weight_decay=train_args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=train_args.max_steps, eta_min=train_args.learning_rate)
-    scaler = torch.cuda.amp.GradScaler()
+    scaler = torch.cuda.amp.GradScaler(init_scale=2**6, growth_interval=400)
 
     step_start = 1
     if checkpoint:
         step_start = load_checkpoint(os.path.join(train_args.data_dir, checkpoint), model, optimizer, scheduler)
-
-    model.train()
-    model.cuda()
-    model.compile()
 
     print(f"{step_start=}")
 
@@ -47,7 +49,7 @@ def main(checkpoint):
     num_batches, _ = token_batches.size()
     print(f"{token_batches.size()=}")
     # token_batches = token_batches[:1024*128, :]
-    print(f"{token_batches.size()=}")
+    # print(f"{token_batches.size()=}")
 
     dataset = torch.utils.data.TensorDataset(token_batches)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=train_args.batch_size, shuffle=True, drop_last=True)
@@ -57,8 +59,6 @@ def main(checkpoint):
 
         total_loss = torch.tensor(0.0)
         for (batch,) in tqdm(dataloader, total=len(dataloader), desc=f"{step=}", leave=False):
-            optimizer.zero_grad()
-
             batch = batch.long().cuda()
             x = batch[:, :-1]
             y = batch[:, 1:]
@@ -68,10 +68,12 @@ def main(checkpoint):
 
             total_loss += loss.cpu().detach().clone()
 
-            loss = scaler.scale(loss)
-            loss.backward()
-
+            scaler.scale(loss).backward()
             optimizer.step()
+            scaler.step(optimizer)
+            scaler.update()
+
+            optimizer.zero_grad()
 
         scheduler.step()
 
@@ -99,15 +101,21 @@ def main(checkpoint):
 # - perplexity analysis (how close are the tokens?)
 # - early termination
 
+# - inference
+# - kv cache
+
 # DONE
 # - hyperparameter tuning
 # - loss function, backward optimizer, gradient, improve mixed precision
 # - shuffle and batch paragraphs
 # - training loop checkpoint code, and logging
 
-# TODO
-# args
-# data_dir
+# FUTURE
+# finetuning
+# C++/CUDA
+# vit
+# transformer chess engine
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--checkpoint", default=None, help="checkpoint path", type=str)

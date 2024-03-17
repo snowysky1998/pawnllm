@@ -16,11 +16,11 @@ class ModelArgs:
 @dataclass
 class TrainArgs:
     data_dir: str = "./data"
-    batch_size: int = 128
+    batch_size: int = 64
     learning_rate: float = 1e-4
     weight_decay: float = 2e-2
     checkpoint_steps: int = 1
-    max_steps: int = 30000
+    max_steps: int = 100
 
 
 @dataclass
