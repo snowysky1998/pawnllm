@@ -81,7 +81,6 @@ def main(checkpoint):
         avg_loss = total_loss.item() / len(dataloader)
         print(f"{step=} {avg_loss=}")
         if step % train_args.checkpoint_steps == 0:
-            discord_log(f"```{step=} {avg_loss=:.4f}```")
             torch.save(
                 {
                     "epoch": step,
@@ -91,7 +90,7 @@ def main(checkpoint):
                 },
                 os.path.join(train_args.data_dir, f"checkpoint{step}.pt"),
             )
-            torch.save(o, "./data/output.pt")
+            discord_log(f"```{step=} {avg_loss=:.4f}```")
 
 
 # TODO
