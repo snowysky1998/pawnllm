@@ -20,10 +20,10 @@ train_args = TrainArgs()
 
 tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token12000.model"))
 
-o = torch.load("output.pt")
+o = torch.load("./data/output.pt")
 o = o.argmax(axis=-1)
 o = rearrange(o, "(b s) -> b s", b=train_args.batch_size)
-o_paragraph = o[:, :]
+o_paragraph = o[42, :]
 print(o_paragraph)
 print(o_paragraph.size())
 

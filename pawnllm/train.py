@@ -1,12 +1,12 @@
 import os
 import torch
+from dataclasses import dataclass
+from tqdm import tqdm
+import argparse
 
 from tokenizer import Tokenizer
 from model import Model
 from config import ModelArgs, TrainArgs
-from tqdm import tqdm
-import argparse
-
 from logger import discord_log
 
 
@@ -37,7 +37,7 @@ def main(checkpoint):
 
     model.train()
     model.cuda()
-    # model.compile()
+    model.compile()
 
     print(f"{step_start=}")
 
@@ -63,23 +63,21 @@ def main(checkpoint):
             x = batch[:, :-1]
             y = batch[:, 1:]
 
-            # with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-            #     o, loss = model(x, y)
-
-            o, loss = model(x, y)
+            with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                o, loss = model(x, y)
 
             total_loss += loss.cpu().detach().clone()
 
-            # loss = scaler.scale(loss)
+            loss = scaler.scale(loss)
             loss.backward()
-            optimizer.step()
 
-        avg_loss = total_loss.item() / len(dataloader)
-        print(f"{step=} {avg_loss=}")
+            optimizer.step()
 
         scheduler.step()
 
         # checkpoint
+        avg_loss = total_loss.item() / len(dataloader)
+        print(f"{step=} {avg_loss=}")
         if step % train_args.checkpoint_steps == 0:
             discord_log(f"```{step=} {avg_loss=:.4f}```")
             torch.save(
@@ -91,7 +89,7 @@ def main(checkpoint):
                 },
                 os.path.join(train_args.data_dir, f"checkpoint{step}.pt"),
             )
-            torch.save(o, "output.pt")
+            torch.save(o, "./data/output.pt")
 
 
 # TODO

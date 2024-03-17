@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 import math
-from dataclasses import dataclass
 
 from einops import rearrange, reduce, einsum, repeat
 
