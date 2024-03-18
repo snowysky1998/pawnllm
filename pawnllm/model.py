@@ -23,8 +23,9 @@ class RMSNorm(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, args, freq_cos, freq_sin):
+    def __init__(self, layer_id, args, freq_cos, freq_sin):
         super().__init__()
+        self.layer_id = layer_id
         self.args = args
         # ====================== attention =================================
         self.attention_norm = RMSNorm(args.h_q * args.d, eps=args.norm_eps)
@@ -55,7 +56,7 @@ class Transformer(nn.Module):
         self.w3 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)
         self.ffn_dropout = nn.Dropout(args.dropout)
 
-    def forward(self, h):
+    def forward(self, h, kv_cache=None, s_pos=None):
         assert h.ndim == 3
         # ============================== norm + attention + residual ============================
         x = self.attention_norm(h)
@@ -68,12 +69,24 @@ class Transformer(nn.Module):
         xk = rearrange(xk, "b s (h_kv d) -> b s h_kv d", d=self.args.d)
         xv = rearrange(xv, "b s (h_kv d) -> b s h_kv d", d=self.args.d)
 
+        # kv cache.size() = n_layer, (k+v), b, s, h_kv, d
+        # xk = b=1, s=1, h_kv, d
+        if kv_cache != None:
+            kv_cache[self.layer_id, 0, :, s_pos-1:s_pos, :, :] = xk
+            kv_cache[self.layer_id, 1, :, s_pos-1:s_pos, :, :] = xv
+            xk = kv_cache[self.layer_id, 0, :, :s_pos, :, :]
+            xv = kv_cache[self.layer_id, 1, :, :s_pos, :, :]
+
         # rotery embedding (RoPE)
         xq_r, xq_i = rearrange(xq.float(), "b s h_q (d_half two) -> b s h_q d_half two", two=2).unbind(-1)
         xk_r, xk_i = rearrange(xk.float(), "b s h_kv (d_half two) -> b s h_kv d_half two", two=2).unbind(-1)
 
         freq_cos = rearrange(self.freq_cos, "s d_half -> 1 s 1 d_half")
         freq_sin = rearrange(self.freq_sin, "s d_half -> 1 s 1 d_half")
+
+        if not self.training:
+            freq_cos = freq_cos[:, :h.size(1), :, :]
+            freq_sin = freq_sin[:, :h.size(1), :, :]
 
         xq_out_r = xq_r * freq_cos - xq_i * freq_sin
         xq_out_i = xq_r * freq_sin + xq_i * freq_cos
@@ -149,9 +162,9 @@ class Model(nn.Module):
         self.freq_cos = nn.Parameter(freq_cos, requires_grad=False)
         self.freq_sin = nn.Parameter(freq_sin, requires_grad=False)
 
-        self.transformers = torch.nn.ModuleList([Transformer(args, self.freq_cos, self.freq_sin) for _ in range(args.n_layers)])
+        self.transformers = torch.nn.ModuleList([Transformer(i, args, self.freq_cos, self.freq_sin) for i in range(args.n_layers)])
 
-    def forward(self, tokens, targets=None):
+    def forward(self, tokens, targets=None, kv_cache=None, s_pos=None):
         assert tokens.ndim == 2
         assert tokens.dtype == torch.int64
         assert targets.ndim == 2 if targets is not None else True
@@ -161,7 +174,7 @@ class Model(nn.Module):
         h = self.dropout(h)
 
         for transformer in self.transformers:
-            h = transformer(h)
+            h = transformer(h, kv_cache=kv_cache, s_pos=s_pos)
 
         h = self.norm(h)  # b s (hd)
 
@@ -174,5 +187,5 @@ class Model(nn.Module):
             return logits, last_loss
         else:
             # inference: only forward the output on the very last position
-            logits = self.wvocab(h)
+            logits = self.wvocab(h[:, -1, :])
             return logits

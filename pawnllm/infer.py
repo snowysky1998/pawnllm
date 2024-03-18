@@ -20,35 +20,38 @@ def main(checkpoint, prompt):
     model.cuda()
     tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token12000.model"))
 
-    x = torch.full((1, args.s), tokenizer.pad_id)
+    # for name, tensor in model.named_parameters():
+    #     print(f"{tensor.dtype} - {name} - {tuple(tensor.size())}")
 
-    if prompt == None:
-        # without prompt
-        x[0, 0] = tokenizer.bos_id
-        infer_start = 1
-        
-    else:
+    # kv_cache.size() == n_layers, (k + v), batch=1, s, h_kv, d
+    kv_cache = torch.zero(args.n_layers, 2, 1, args.s, args.h_kv, args.d).float().cuda()
+
+    if prompt != None:
         prompt_token = torch.Tensor(tokenizer.encode(prompt, bos=False))
-        # print(f"{prompt_token.size()=}")
-        # print(f"{prompt_token=}")
         prompt_token = rearrange(prompt_token, "len -> 1 len")
-        x[:,:prompt_token.size(dim=-1)] = prompt_token
+        tokens = prompt_token
         infer_start = prompt_token.size(dim=-1)
+    else:
+        tokens = torch.full((1, 1), tokenizer.bos_id)
+        infer_start = 1
 
-        # print(f"{x.size()=}")
-        # print(f"{x=}")
-
-
-    x = x.long().cuda()
+    tokens = tokens.long().cuda()
 
     for s in range(infer_start, args.s):
-        y = model(x)
-        y = y.argmax(axis=-1)
-        x[:, s] = y[:, s - 1]
-    
-    x = rearrange(x, "1 s -> s")
-    print(tokenizer.list_decode(x.tolist()))
-    print(tokenizer.decode(x.tolist()))
+        logits = model(tokens[:, s-1:s], kv_cache=kv_cache, s_pos=s)
+        # logits = model(tokens[:, :])
+        logits = rearrange(logits, "b vocab_size -> b 1 vocab_size")
+
+        next_token = logits.argmax(axis=-1)
+        if next_token.item() == tokenizer.eos_id:
+            break
+
+        print(tokenizer.list_decode(next_token.tolist()))
+        tokens = torch.cat([tokens, next_token], dim=-1)
+
+    tokens = rearrange(tokens, "1 s -> s")
+    print(tokenizer.list_decode(tokens.tolist()))
+    print(tokenizer.decode(tokens.tolist()))
 
 
 if __name__ == "__main__":
