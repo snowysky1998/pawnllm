@@ -24,7 +24,7 @@ def main(checkpoint, prompt):
     #     print(f"{tensor.dtype} - {name} - {tuple(tensor.size())}")
 
     # kv_cache.size() == n_layers, (k + v), batch=1, s, h_kv, d
-    kv_cache = torch.zero(args.n_layers, 2, 1, args.s, args.h_kv, args.d).float().cuda()
+    kv_cache = torch.zeros(args.n_layers, 2, 1, args.s, args.h_kv, args.d).float().cuda()
 
     if prompt != None:
         prompt_token = torch.Tensor(tokenizer.encode(prompt, bos=False))
@@ -37,20 +37,24 @@ def main(checkpoint, prompt):
 
     tokens = tokens.long().cuda()
 
-    for s in range(infer_start, args.s):
-        logits = model(tokens[:, s-1:s], kv_cache=kv_cache, s_pos=s)
+    for pos in range(infer_start, args.s):
+
+        logits = model(tokens[:, pos-1:pos], kv_cache=kv_cache, s_pos=pos)
         # logits = model(tokens[:, :])
         logits = rearrange(logits, "b vocab_size -> b 1 vocab_size")
 
         next_token = logits.argmax(axis=-1)
+
+        # print(tokenizer.list_decode(next_token.tolist()))
+        tokens = torch.cat([tokens, next_token], dim=-1)
+
+
         if next_token.item() == tokenizer.eos_id:
             break
 
-        print(tokenizer.list_decode(next_token.tolist()))
-        tokens = torch.cat([tokens, next_token], dim=-1)
 
     tokens = rearrange(tokens, "1 s -> s")
-    print(tokenizer.list_decode(tokens.tolist()))
+    print(tokenizer.list_decode(tokens.tolist(), print_eos=True))
     print(tokenizer.decode(tokens.tolist()))
 
 
