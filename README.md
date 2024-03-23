@@ -33,7 +33,7 @@ python pawnllm/train.py
 # resume training from specific checkpoint
 # python pawnllm/train.py -c checkpoint10.pt
 
-# run inference
+# run inference with prompt
 # python pawnllm/infer.py -c checkpoint15.pt
 python pawnllm/infer.py -c checkpoint15.pt -p "Once upon a time, there was a big bear"
 ```
