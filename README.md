@@ -2,7 +2,7 @@
 
 <img height="190" style="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Chess_piece_-_White_pawn.JPG/134px-Chess_piece_-_White_pawn.JPG">
 
-Minimal and education LLM trained on the tinystories dataset in 421 lines of code.
+Minimal and educational LLM trained on the tinystories dataset in 421 lines of code.
 
 ## Dependencies:
 
