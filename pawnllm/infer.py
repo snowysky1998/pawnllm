@@ -24,7 +24,7 @@ def main(checkpoint, prompt):
     #     print(f"{tensor.dtype} - {name} - {tuple(tensor.size())}")
 
     if prompt != None:
-        prompt_token = torch.Tensor(tokenizer.encode(prompt, bos=False))
+        prompt_token = torch.Tensor(tokenizer.encode(prompt, bos=True))
         prompt_token = rearrange(prompt_token, "len -> 1 len")
         tokens = prompt_token
         infer_start = prompt_token.size(dim=-1)
@@ -47,7 +47,7 @@ def main(checkpoint, prompt):
             break
 
     tokens = rearrange(tokens, "1 s -> s")
-    print(tokenizer.list_decode(tokens.tolist(), print_eos=True))
+    print(tokenizer.list_decode(tokens.tolist(), print_bos=True, print_eos=True))
     print(tokenizer.decode(tokens.tolist()))
 
 

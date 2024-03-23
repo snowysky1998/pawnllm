@@ -1,8 +1,5 @@
 torch
 einops
-numpy
-tqdm
 sentencepiece
+tqdm
 datasets
-discord
-python-dotenv

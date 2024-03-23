@@ -7,7 +7,6 @@ import argparse
 from tokenizer import Tokenizer
 from model import Model
 from config import ModelArgs, TrainArgs
-from logger import discord_log
 
 train_args = TrainArgs()
 args = ModelArgs()
