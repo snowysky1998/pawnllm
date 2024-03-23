@@ -28,8 +28,3 @@ async def discord_log_async(client, message):
 def discord_log(message):
     client = discord.Client(intents=discord.Intents.default())
     asyncio.run(discord_log_async(client, message))
-
-
-if __name__ == "__main__":
-    discord_log("```hello world```")
-    discord_log("```bbbbb```")

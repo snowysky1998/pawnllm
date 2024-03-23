@@ -46,10 +46,6 @@ def main(checkpoint):
     print(f"Loading dataset")
     token_batches = torch.load(os.path.join(train_args.data_dir, f"tiny_batches_s{args.s}.pt"))
     assert token_batches.ndim == 2
-    num_batches, _ = token_batches.size()
-    print(f"{token_batches.size()=}")
-    # token_batches = token_batches[:1024*128, :]
-    # print(f"{token_batches.size()=}")
 
     dataset = torch.utils.data.TensorDataset(token_batches)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=train_args.batch_size, shuffle=True, drop_last=True)
@@ -90,30 +86,7 @@ def main(checkpoint):
                 },
                 os.path.join(train_args.data_dir, f"checkpoint{step}.pt"),
             )
-            discord_log(f"```{step=} {avg_loss=:.4f}```")
 
-
-# TODO
-# train
-# - split eval and validation
-# - write model eval and validation
-# - perplexity analysis (how close are the tokens?)
-# - early termination
-
-# - inference
-# - kv cache
-
-# DONE
-# - hyperparameter tuning
-# - loss function, backward optimizer, gradient, improve mixed precision
-# - shuffle and batch paragraphs
-# - training loop checkpoint code, and logging
-
-# FUTURE
-# finetuning
-# C++/CUDA
-# vit
-# transformer chess engine
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

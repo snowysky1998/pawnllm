@@ -4,9 +4,6 @@ from sentencepiece import SentencePieceProcessor
 
 class Tokenizer:
     def __init__(self, tokenizer_path):
-        """
-        Tokenizer class constructor
-        """
         assert os.path.isfile(tokenizer_path), f"Tokenizer not found at {tokenizer_path}"
 
         self.sp = SentencePieceProcessor(tokenizer_path)
@@ -16,14 +13,7 @@ class Tokenizer:
         self.eos_id = self.sp.eos_id()
         self.pad_id = self.sp.pad_id()
 
-    def encode(self, text: str, bos: bool = False, eos: bool = False) -> list[int]:
-        """
-        encodes the input string
-        input:  text(str) : text to be encoded
-                bos(bool) : add bos_id to the output vector
-                eos(bool) : add eos_id to the output vector
-        output: (list[int]) : vector of encoded string
-        """
+    def encode(self, text, bos=False, eos=False):
         encoded_token = self.sp.encode(text)
         if bos:
             encoded_token = [self.bos_id] + encoded_token
@@ -31,15 +21,10 @@ class Tokenizer:
             encoded_token = encoded_token + [self.eos_id]
         return encoded_token
 
-    def decode(self, encoded_token: list[int]) -> str:
-        """
-        decodes the input vector
-        input:  encoded_token(list[int]) : vector to be decoded
-        output: (str) : string of decoded vector
-        """
+    def decode(self, encoded_token):
         return self.sp.decode(encoded_token)
 
-    def list_decode(self, encoded_token: list[int], print_bos=True, print_eos=True, print_pad=False) -> list[str]:
+    def list_decode(self, encoded_token, print_bos=True, print_eos=True, print_pad=False):
         str = []
         for token in encoded_token:
             if token == self.bos_id:

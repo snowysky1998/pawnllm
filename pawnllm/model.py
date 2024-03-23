@@ -56,7 +56,7 @@ class Transformer(nn.Module):
         self.w3 = nn.Linear(ffn_num_features, args.h_q * args.d, bias=False)
         self.ffn_dropout = nn.Dropout(args.dropout)
 
-    def forward(self, h, kv_cache=None, s_pos=None):
+    def forward(self, h):
         assert h.ndim == 3
         # ============================== norm + attention + residual ============================
         x = self.attention_norm(h)
@@ -69,20 +69,6 @@ class Transformer(nn.Module):
         xk = rearrange(xk, "b s (h_kv d) -> b s h_kv d", d=self.args.d)
         xv = rearrange(xv, "b s (h_kv d) -> b s h_kv d", d=self.args.d)
 
-
-        # kv cache.size() = n_layer, (k+v), b, s, h_kv, d
-        # xk = b=1, s=1, h_kv, d
-
-        # kv caching before rope works but not the other way around. what's the difference?
-        # why does it not work? why? why?why?why?why?why?why?why?why?why?why?why?
-        if kv_cache != None:
-            kv_cache[self.layer_id, 0, :, s_pos-1:s_pos, :, :] = xk[:,:,:,:]
-            kv_cache[self.layer_id, 1, :, s_pos-1:s_pos, :, :] = xv[:,:,:,:]
-            xk = kv_cache[self.layer_id, 0, :, :s_pos, :, :]
-            xv = kv_cache[self.layer_id, 1, :, :s_pos, :, :]
-
-
-
         # rotery embedding (RoPE)
         xq_r, xq_i = rearrange(xq.float(), "b s h_q (d_half two) -> b s h_q d_half two", two=2).unbind(-1)
         xk_r, xk_i = rearrange(xk.float(), "b s h_kv (d_half two) -> b s h_kv d_half two", two=2).unbind(-1)
@@ -90,28 +76,21 @@ class Transformer(nn.Module):
         freq_cos = rearrange(self.freq_cos, "s d_half -> 1 s 1 d_half")
         freq_sin = rearrange(self.freq_sin, "s d_half -> 1 s 1 d_half")
 
-
         if not self.training:
-            if kv_cache != None:
-                # if kv_cache
-                freq_cos = freq_cos[:, :s_pos, :, :]
-                freq_sin = freq_sin[:, :s_pos, :, :]
-            else:
-                freq_cos = freq_cos[:, :h.size(1), :, :]
-                freq_sin = freq_sin[:, :h.size(1), :, :]
+            freq_cos = freq_cos[:, : h.size(1), :, :]
+            freq_sin = freq_sin[:, : h.size(1), :, :]
 
+        # rope embedding
         xq_out_r = xq_r * freq_cos - xq_i * freq_sin
         xq_out_i = xq_r * freq_sin + xq_i * freq_cos
         xk_out_r = xk_r * freq_cos - xk_i * freq_sin
         xk_out_i = xk_r * freq_sin + xk_i * freq_cos
-
 
         xq_out = torch.stack([xq_out_r, xq_out_i], dim=-1)
         xk_out = torch.stack([xk_out_r, xk_out_i], dim=-1)
 
         xq = rearrange(xq_out.float(), "b s h_q  d_half two -> b s h_q  (d_half two)").type_as(xq)
         xk = rearrange(xk_out.float(), "b s h_kv d_half two -> b s h_kv (d_half two)").type_as(xk)
-
 
         # (grouped) scaled-dot-product-attention
         xk = repeat(xk, "b s h_kv d -> b s (repeat h_kv) d", repeat=self.args.h_q // self.args.h_kv)
@@ -149,10 +128,7 @@ class Transformer(nn.Module):
 
         h2 = h1 + o  # b s (hd)
 
-        if kv_cache != None:
-            return h2[:,-1:,:]
-        else:
-            return h2
+        return h2
 
 
 class Model(nn.Module):
@@ -181,7 +157,7 @@ class Model(nn.Module):
 
         self.transformers = torch.nn.ModuleList([Transformer(i, args, self.freq_cos, self.freq_sin) for i in range(args.n_layers)])
 
-    def forward(self, tokens, targets=None, kv_cache=None, s_pos=None):
+    def forward(self, tokens, targets=None):
         assert tokens.ndim == 2
         assert tokens.dtype == torch.int64
         assert targets.ndim == 2 if targets is not None else True
@@ -191,7 +167,7 @@ class Model(nn.Module):
         h = self.dropout(h)
 
         for transformer in self.transformers:
-            h = transformer(h, kv_cache=kv_cache, s_pos=s_pos)
+            h = transformer(h)
 
         h = self.norm(h)  # b s (hd)
 
