@@ -9,17 +9,15 @@ import argparse
 train_args = TrainArgs()
 args = ModelArgs()
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
 
 def main(checkpoint, prompt):
     model = Model(args)
     checkpoint_path = os.path.join(train_args.data_dir, checkpoint)
     assert os.path.isfile(checkpoint_path), f"Checkpoint not found at {checkpoint_path}"
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
-    model.to(device)
+    model.cuda()
     tokenizer = Tokenizer(os.path.join(train_args.data_dir, f"token12000.model"))
 
     # for name, tensor in model.named_parameters():
@@ -34,7 +32,7 @@ def main(checkpoint, prompt):
         tokens = torch.full((1, 1), tokenizer.bos_id)
         infer_start = 1
 
-    tokens = tokens.long().to(device)
+    tokens = tokens.long().cuda()
 
     for _ in range(infer_start, args.s):
         logits = model(tokens)
