@@ -1,0 +1,16 @@
+[project]
+name = "pawnllm"
+version = "0.1.0"
+description = "Minimal and educational LLM trained on the tinystories dataset"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "torch",
+    "einops",
+    "sentencepiece",
+    "tqdm",
+    "datasets",
+]
+
+[tool.uv]
+package = false
