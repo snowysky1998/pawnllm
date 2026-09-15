@@ -1,0 +1,42 @@
+{
+  "repo": "UofTCSSLab/Maia3-23M",
+  "revision": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+  "commits": [
+    {
+      "commit": "51a0145a8178046f7de23119160b136672deeb2b",
+      "date": "2026-05-23T22:15:44+00:00",
+      "title": "Update README.md"
+    },
+    {
+      "commit": "bc515017a2fafa2fc07daee3ccebc2bd61a1125e",
+      "date": "2026-05-23T22:09:27+00:00",
+      "title": "Create README.md"
+    },
+    {
+      "commit": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+      "date": "2026-05-17T23:38:18+00:00",
+      "title": "Upload maia3-23m.pt"
+    },
+    {
+      "commit": "04ddc9a91d1433d9396de6fe0b005503ba4a227e",
+      "date": "2026-05-17T23:36:22+00:00",
+      "title": "initial commit"
+    }
+  ],
+  "files": [
+    {
+      "name": ".gitattributes",
+      "size": 1519,
+      "lfs": null
+    },
+    {
+      "name": "maia3-23m.pt",
+      "size": 91799307,
+      "lfs": {
+        "size": 91799307,
+        "sha256": "bce6cd1af5f0399ac7eed33fabb7a6a2ef6193662c2740f262bf93af7bfb3569",
+        "pointer_size": 133
+      }
+    }
+  ]
+}

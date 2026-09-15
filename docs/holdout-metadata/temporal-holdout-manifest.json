@@ -1,0 +1,2002 @@
+{
+  "format_version": 1,
+  "args": {
+    "history": 8,
+    "command": "build",
+    "chunks": "/mnt/archive/lichess/temporal-chunks",
+    "output": "/mnt/archive/lichess/temporal-holdout-2026",
+    "val_month": "2026-07",
+    "test_month": "2026-08",
+    "val_per_band": 1000,
+    "test_per_band": 2000,
+    "prior_games": "runs/temporal-holdout/prior-games.json",
+    "publication": "runs/temporal-holdout/maia-publication.json",
+    "seed": 20260915
+  },
+  "rating_conditioned": true,
+  "positions": {
+    "val": 5000,
+    "test": 10000
+  },
+  "split": "validation July 2026, test August 2026; one position per game; no train split",
+  "stats": {
+    "val": {
+      "scan": {
+        "scanned_games": 1388329,
+        "eligible_headers": 622812,
+        "no_clock_safe_position": 261
+      },
+      "positions_by_rating": {
+        "600-999": 1000,
+        "1000-1399": 1000,
+        "1400-1799": 1000,
+        "1800-2199": 1000,
+        "2200-2600": 1000
+      },
+      "games_by_date": {
+        "2026-07-26": 202,
+        "2026-07-19": 226,
+        "2026-07-22": 199,
+        "2026-07-09": 146,
+        "2026-07-08": 158,
+        "2026-07-21": 156,
+        "2026-07-31": 152,
+        "2026-07-25": 145,
+        "2026-07-14": 174,
+        "2026-07-20": 153,
+        "2026-07-16": 222,
+        "2026-07-18": 95,
+        "2026-07-23": 164,
+        "2026-07-17": 167,
+        "2026-07-07": 144,
+        "2026-07-13": 145,
+        "2026-07-15": 153,
+        "2026-07-04": 176,
+        "2026-07-10": 172,
+        "2026-07-24": 100,
+        "2026-07-03": 156,
+        "2026-07-29": 153,
+        "2026-07-02": 155,
+        "2026-07-11": 155,
+        "2026-07-05": 171,
+        "2026-07-30": 199,
+        "2026-07-01": 162,
+        "2026-07-06": 152,
+        "2026-07-27": 155,
+        "2026-07-28": 142,
+        "2026-07-12": 151
+      },
+      "candidate_dates": {
+        "2026-07-01": 19699,
+        "2026-07-02": 19892,
+        "2026-07-03": 19103,
+        "2026-07-04": 19191,
+        "2026-07-05": 19371,
+        "2026-07-06": 19306,
+        "2026-07-07": 17245,
+        "2026-07-08": 21697,
+        "2026-07-09": 19323,
+        "2026-07-10": 19497,
+        "2026-07-11": 19506,
+        "2026-07-12": 18990,
+        "2026-07-13": 19328,
+        "2026-07-14": 19570,
+        "2026-07-15": 19375,
+        "2026-07-16": 26099,
+        "2026-07-17": 19240,
+        "2026-07-18": 12864,
+        "2026-07-19": 26020,
+        "2026-07-20": 19711,
+        "2026-07-21": 19570,
+        "2026-07-22": 26003,
+        "2026-07-23": 19597,
+        "2026-07-24": 13035,
+        "2026-07-25": 19178,
+        "2026-07-26": 26252,
+        "2026-07-27": 19511,
+        "2026-07-28": 19363,
+        "2026-07-29": 19521,
+        "2026-07-30": 26101,
+        "2026-07-31": 19654
+      }
+    },
+    "test": {
+      "scan": {
+        "scanned_games": 1378279,
+        "eligible_headers": 621863,
+        "no_clock_safe_position": 523
+      },
+      "positions_by_rating": {
+        "600-999": 2000,
+        "1000-1399": 2000,
+        "1400-1799": 2000,
+        "1800-2199": 2000,
+        "2200-2600": 2000
+      },
+      "games_by_date": {
+        "2026-08-25": 354,
+        "2026-08-10": 317,
+        "2026-08-14": 287,
+        "2026-08-27": 317,
+        "2026-08-08": 355,
+        "2026-08-04": 425,
+        "2026-08-18": 300,
+        "2026-08-16": 319,
+        "2026-08-12": 310,
+        "2026-08-01": 299,
+        "2026-08-06": 293,
+        "2026-08-19": 298,
+        "2026-08-05": 307,
+        "2026-08-24": 418,
+        "2026-08-22": 298,
+        "2026-08-21": 356,
+        "2026-08-28": 325,
+        "2026-08-30": 317,
+        "2026-08-07": 259,
+        "2026-08-15": 306,
+        "2026-08-17": 395,
+        "2026-08-29": 297,
+        "2026-08-11": 311,
+        "2026-08-23": 325,
+        "2026-08-20": 333,
+        "2026-08-03": 324,
+        "2026-08-13": 329,
+        "2026-08-26": 295,
+        "2026-08-31": 275,
+        "2026-08-02": 315,
+        "2026-08-09": 341
+      },
+      "candidate_dates": {
+        "2026-08-01": 16862,
+        "2026-08-02": 19433,
+        "2026-08-03": 19233,
+        "2026-08-04": 26853,
+        "2026-08-05": 19558,
+        "2026-08-06": 19568,
+        "2026-08-07": 17251,
+        "2026-08-08": 21332,
+        "2026-08-09": 19527,
+        "2026-08-10": 19488,
+        "2026-08-11": 19608,
+        "2026-08-12": 19095,
+        "2026-08-13": 19744,
+        "2026-08-14": 19796,
+        "2026-08-15": 19644,
+        "2026-08-16": 19369,
+        "2026-08-17": 26060,
+        "2026-08-18": 19468,
+        "2026-08-19": 19656,
+        "2026-08-20": 20105,
+        "2026-08-21": 19540,
+        "2026-08-22": 19254,
+        "2026-08-23": 19480,
+        "2026-08-24": 26112,
+        "2026-08-25": 19683,
+        "2026-08-26": 19408,
+        "2026-08-27": 19311,
+        "2026-08-28": 19409,
+        "2026-08-29": 19234,
+        "2026-08-30": 19503,
+        "2026-08-31": 19279
+      }
+    }
+  },
+  "sources": {
+    "val": {
+      "source": {
+        "month": "2026-07",
+        "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-07.pgn.zst",
+        "bytes": 29051046504,
+        "etag": "\"6a6e60d0-6c393ca68\"",
+        "last_modified": "Sat, 01 Aug 2026 21:10:40 GMT",
+        "chunks": 96,
+        "seed": 20260915,
+        "sampling": "one complete pzstd frame after a seeded random byte offset in each equal-byte stratum"
+      },
+      "frames": [
+        {
+          "index": 0,
+          "probe_offset": 28021565,
+          "frame_start": 28091783,
+          "frame_end": 32777819,
+          "compressed_bytes": 4686037,
+          "decompressed_bytes": 33554432,
+          "sha256": "1ae5f9c0ac22b393f18d1f74e3adfae0ba05ab60ac12981e19e00aec7926ef05"
+        },
+        {
+          "index": 1,
+          "probe_offset": 562062923,
+          "frame_start": 563616880,
+          "frame_end": 568322235,
+          "compressed_bytes": 4705356,
+          "decompressed_bytes": 33554432,
+          "sha256": "7026fbeaf065d8ec8edf9966475d89be69b79cc42bba0236d16dd80cfbf14a50"
+        },
+        {
+          "index": 2,
+          "probe_offset": 665432964,
+          "frame_start": 667351694,
+          "frame_end": 672047176,
+          "compressed_bytes": 4695483,
+          "decompressed_bytes": 33554432,
+          "sha256": "d8edf9a5f2fcb5d0e58396e8275787dc3cd0e094054fccc2ee9416f703e8a265"
+        },
+        {
+          "index": 3,
+          "probe_offset": 1061563612,
+          "frame_start": 1065186477,
+          "frame_end": 1069866482,
+          "compressed_bytes": 4680006,
+          "decompressed_bytes": 33554432,
+          "sha256": "0b4a3ee1ac250bdb212939f1361498f56d1a3b02d3d73a679569b36456912dbd"
+        },
+        {
+          "index": 4,
+          "probe_offset": 1286907833,
+          "frame_start": 1290997549,
+          "frame_end": 1295698983,
+          "compressed_bytes": 4701435,
+          "decompressed_bytes": 33554432,
+          "sha256": "9f5f0f8a03d2f8cbe5357873604f8d54b088d9ce91cc41c34c0f705fad2f539c"
+        },
+        {
+          "index": 5,
+          "probe_offset": 1602085306,
+          "frame_start": 1602413573,
+          "frame_end": 1607146872,
+          "compressed_bytes": 4733300,
+          "decompressed_bytes": 33554432,
+          "sha256": "c394e027c89b5373215573b2154a7175953045e81367da987d9dea07b6b538e4"
+        },
+        {
+          "index": 6,
+          "probe_offset": 1842432930,
+          "frame_start": 1846500114,
+          "frame_end": 1851166403,
+          "compressed_bytes": 4666290,
+          "decompressed_bytes": 33554432,
+          "sha256": "0a7242cae5266b4cc1fb1caeb100cba2b36928fe24e35fca1a52baebe76b2e9b"
+        },
+        {
+          "index": 7,
+          "probe_offset": 2414217469,
+          "frame_start": 2415266203,
+          "frame_end": 2419984764,
+          "compressed_bytes": 4718562,
+          "decompressed_bytes": 33554432,
+          "sha256": "e187b3475df4c01c8424db646c152864da966bb04ae6cdf5f1e6f0bd925890db"
+        },
+        {
+          "index": 8,
+          "probe_offset": 2609852465,
+          "frame_start": 2613291174,
+          "frame_end": 2617991077,
+          "compressed_bytes": 4699904,
+          "decompressed_bytes": 33554432,
+          "sha256": "8cb6dd4b51d14c2d600c0383b9e0cde21843b9e69d92d200920d0d28f3267e77"
+        },
+        {
+          "index": 9,
+          "probe_offset": 2732399697,
+          "frame_start": 2734933579,
+          "frame_end": 2739596666,
+          "compressed_bytes": 4663088,
+          "decompressed_bytes": 33554432,
+          "sha256": "cc1bef557b1867b4c4716d7a483fc301ac0d49e78840eb9ff194dacb11751352"
+        },
+        {
+          "index": 10,
+          "probe_offset": 3233612695,
+          "frame_start": 3234959418,
+          "frame_end": 3239692932,
+          "compressed_bytes": 4733515,
+          "decompressed_bytes": 33554432,
+          "sha256": "979879439d848b8e20b3fd63e72d7c2e4ebc12c80ed9a5797f1e7b4335c406ec"
+        },
+        {
+          "index": 11,
+          "probe_offset": 3495089847,
+          "frame_start": 3499147296,
+          "frame_end": 3503834127,
+          "compressed_bytes": 4686832,
+          "decompressed_bytes": 33554432,
+          "sha256": "70095a2feb8b97d552b405d35aa02242f79cd4cd1f7a0cda0acb2f4f55a86588"
+        },
+        {
+          "index": 12,
+          "probe_offset": 3861976315,
+          "frame_start": 3865402024,
+          "frame_end": 3870134664,
+          "compressed_bytes": 4732641,
+          "decompressed_bytes": 33554432,
+          "sha256": "dd0f9281165a5c3d881debba920857712384f1e81e763431b861cf185d404946"
+        },
+        {
+          "index": 13,
+          "probe_offset": 4070786733,
+          "frame_start": 4073794981,
+          "frame_end": 4078529268,
+          "compressed_bytes": 4734288,
+          "decompressed_bytes": 33554432,
+          "sha256": "aee276ce1b1fb6f7210bdd99215cfb58f2525933d27b121d0c5ef2e93c03ced3"
+        },
+        {
+          "index": 14,
+          "probe_offset": 4500714672,
+          "frame_start": 4502808759,
+          "frame_end": 4507478205,
+          "compressed_bytes": 4669447,
+          "decompressed_bytes": 33554432,
+          "sha256": "966a7cd6cf31c397f4a8166c9ebcec994bcb393aea7f1b0448fb3cedfbdba470"
+        },
+        {
+          "index": 15,
+          "probe_offset": 4646871603,
+          "frame_start": 4647330405,
+          "frame_end": 4651993462,
+          "compressed_bytes": 4663058,
+          "decompressed_bytes": 33554432,
+          "sha256": "90c5d9d4552b7a4d961354650c67ad62f484f9a82e1612a32f2fe4fde51a700e"
+        },
+        {
+          "index": 16,
+          "probe_offset": 4920683815,
+          "frame_start": 4924712252,
+          "frame_end": 4929425961,
+          "compressed_bytes": 4713710,
+          "decompressed_bytes": 33554432,
+          "sha256": "9dcc1b684242dddaeaa06b3c911f3a81940ce1915478a70a8bf32176a5193572"
+        },
+        {
+          "index": 17,
+          "probe_offset": 5176023778,
+          "frame_start": 5179381033,
+          "frame_end": 5184094855,
+          "compressed_bytes": 4713823,
+          "decompressed_bytes": 33554432,
+          "sha256": "099f682d9a0c0c6b006e6105550e53f04832a46730a39894e49cd0771f5e222e"
+        },
+        {
+          "index": 18,
+          "probe_offset": 5515422736,
+          "frame_start": 5516639924,
+          "frame_end": 5521308280,
+          "compressed_bytes": 4668357,
+          "decompressed_bytes": 33554432,
+          "sha256": "9450590c8183699a41b922e92d7dba7ab779238d5a546589c5b36ebbd083ec37"
+        },
+        {
+          "index": 19,
+          "probe_offset": 5795307093,
+          "frame_start": 5797998186,
+          "frame_end": 5802720944,
+          "compressed_bytes": 4722759,
+          "decompressed_bytes": 33554432,
+          "sha256": "89df6b31f5b98322d0fdf502541ea87a430fd5e1ee8decd936bf23610f0f50a2"
+        },
+        {
+          "index": 20,
+          "probe_offset": 6335984300,
+          "frame_start": 6339152392,
+          "frame_end": 6343826501,
+          "compressed_bytes": 4674110,
+          "decompressed_bytes": 33554432,
+          "sha256": "bfde99aacd07a94149ae2c0c5a16f1a368cea565ec3d00d89562aef086164aaa"
+        },
+        {
+          "index": 21,
+          "probe_offset": 6570287934,
+          "frame_start": 6572860898,
+          "frame_end": 6577572160,
+          "compressed_bytes": 4711263,
+          "decompressed_bytes": 33554432,
+          "sha256": "06e1315685c88df23528bc9d3fdc63605e20207fa9bc3b7f47bd27c3d521b678"
+        },
+        {
+          "index": 22,
+          "probe_offset": 6814796706,
+          "frame_start": 6818018882,
+          "frame_end": 6822739850,
+          "compressed_bytes": 4720969,
+          "decompressed_bytes": 33554432,
+          "sha256": "717c3981f17d267cde878fded4b46b192c8b7c0e7c259e07a01a8e10be4efbf6"
+        },
+        {
+          "index": 23,
+          "probe_offset": 7015873728,
+          "frame_start": 7016238797,
+          "frame_end": 7020959224,
+          "compressed_bytes": 4720428,
+          "decompressed_bytes": 33554432,
+          "sha256": "d5d6b3f68b78a43961f0f3a304b55d267f4c6475eab934d3bf3104b82384f641"
+        },
+        {
+          "index": 24,
+          "probe_offset": 7538334110,
+          "frame_start": 7541597211,
+          "frame_end": 7546298308,
+          "compressed_bytes": 4701098,
+          "decompressed_bytes": 33554432,
+          "sha256": "8f1aeb130ada82166d98293445da479594c6b548409a57c4a717f1e4e85b037c"
+        },
+        {
+          "index": 25,
+          "probe_offset": 7793630280,
+          "frame_start": 7796323195,
+          "frame_end": 7801050493,
+          "compressed_bytes": 4727299,
+          "decompressed_bytes": 33554432,
+          "sha256": "9beb6228434adc11434cf7db0f324e9357b5e6b1d9d1da294cdcf6be2d402d38"
+        },
+        {
+          "index": 26,
+          "probe_offset": 8159400136,
+          "frame_start": 8163974571,
+          "frame_end": 8168650929,
+          "compressed_bytes": 4676359,
+          "decompressed_bytes": 33554432,
+          "sha256": "a3b12fdeac690e5baf55bce69bdc42a6cb44d9c5b5039eb078ae9bc924d867d3"
+        },
+        {
+          "index": 27,
+          "probe_offset": 8271746781,
+          "frame_start": 8276230842,
+          "frame_end": 8280912752,
+          "compressed_bytes": 4681911,
+          "decompressed_bytes": 33554432,
+          "sha256": "5c437e38779e1a477cc6d269ad037c0658f0416e93ad621eccd3d52e1a52f993"
+        },
+        {
+          "index": 28,
+          "probe_offset": 8538675983,
+          "frame_start": 8538812949,
+          "frame_end": 8543529004,
+          "compressed_bytes": 4716056,
+          "decompressed_bytes": 33554432,
+          "sha256": "87e901873e81347c0a1cd528256dea49f92b755ac260d5af3af4465873179ef9"
+        },
+        {
+          "index": 29,
+          "probe_offset": 8950196033,
+          "frame_start": 8954390133,
+          "frame_end": 8959103896,
+          "compressed_bytes": 4713764,
+          "decompressed_bytes": 33554432,
+          "sha256": "da0277a829bdbe43908cc94b67a9453e993a78d4fc313f107c75e21dbbb54c36"
+        },
+        {
+          "index": 30,
+          "probe_offset": 9288757905,
+          "frame_start": 9291951430,
+          "frame_end": 9296653386,
+          "compressed_bytes": 4701957,
+          "decompressed_bytes": 33554432,
+          "sha256": "543e8b0ad95399bf0368a04e08758adf37a67f99df158a7ebe3d6611e2f8b0f4"
+        },
+        {
+          "index": 31,
+          "probe_offset": 9438994275,
+          "frame_start": 9442918717,
+          "frame_end": 9447621198,
+          "compressed_bytes": 4702482,
+          "decompressed_bytes": 33554432,
+          "sha256": "d5529e3e139df4f97a932ec1823d742fa690bbf8eeb994066348874a780fbfbc"
+        },
+        {
+          "index": 32,
+          "probe_offset": 9801159267,
+          "frame_start": 9802296408,
+          "frame_end": 9807005891,
+          "compressed_bytes": 4709484,
+          "decompressed_bytes": 33554432,
+          "sha256": "7b1f9a8ed03a20b3cdbf6e185b6213269322663239b943b196450c3e9388f998"
+        },
+        {
+          "index": 33,
+          "probe_offset": 10164655998,
+          "frame_start": 10168159199,
+          "frame_end": 10172902805,
+          "compressed_bytes": 4743607,
+          "decompressed_bytes": 33554432,
+          "sha256": "3bdf01e1a4a50562fec068c5533f8f9b67149f098e594c5b6ae63b5519a04ce4"
+        },
+        {
+          "index": 34,
+          "probe_offset": 10517314737,
+          "frame_start": 10518275659,
+          "frame_end": 10523013857,
+          "compressed_bytes": 4738199,
+          "decompressed_bytes": 33554432,
+          "sha256": "cf3fe30d14334a697d51ed335b6339f1c916490b4bc7850fa937636637308b82"
+        },
+        {
+          "index": 35,
+          "probe_offset": 10657905740,
+          "frame_start": 10659899288,
+          "frame_end": 10664602530,
+          "compressed_bytes": 4703243,
+          "decompressed_bytes": 33554432,
+          "sha256": "0c9473909c6a87b957d6e433ea38000f2376bedff7a7cb37e609dbf6e61eb5dd"
+        },
+        {
+          "index": 36,
+          "probe_offset": 11026760231,
+          "frame_start": 11030796352,
+          "frame_end": 11035450118,
+          "compressed_bytes": 4653767,
+          "decompressed_bytes": 33554432,
+          "sha256": "d12e7ccef49eb593a87e967b8c3e3dccdb5f99b24e378c9cea854e89c906653f"
+        },
+        {
+          "index": 37,
+          "probe_offset": 11484123759,
+          "frame_start": 11486631950,
+          "frame_end": 11491353641,
+          "compressed_bytes": 4721692,
+          "decompressed_bytes": 33554432,
+          "sha256": "ee34266695674ac55af1015e4b3f355d4bf9b47549f1ad0d8752f337285cdfe5"
+        },
+        {
+          "index": 38,
+          "probe_offset": 11601853252,
+          "frame_start": 11604611208,
+          "frame_end": 11609320533,
+          "compressed_bytes": 4709326,
+          "decompressed_bytes": 33554432,
+          "sha256": "ac57062cde5f14da55de9b83f2c4d89b10b37b8b47390ba31b00b8c442740b4d"
+        },
+        {
+          "index": 39,
+          "probe_offset": 12020242262,
+          "frame_start": 12021861661,
+          "frame_end": 12026513623,
+          "compressed_bytes": 4651963,
+          "decompressed_bytes": 33554432,
+          "sha256": "d43416b119d69755bf32fa959aa3620e1632bc67bbf0cffbbe2bddd5ab0ef0e3"
+        },
+        {
+          "index": 40,
+          "probe_offset": 12278217559,
+          "frame_start": 12280106388,
+          "frame_end": 12284815871,
+          "compressed_bytes": 4709484,
+          "decompressed_bytes": 33554432,
+          "sha256": "9cb75e23dca495566ab16e386f305d774b6870e5ff3acb9415ae117f4b3a998b"
+        },
+        {
+          "index": 41,
+          "probe_offset": 12520381490,
+          "frame_start": 12520824789,
+          "frame_end": 12525542454,
+          "compressed_bytes": 4717666,
+          "decompressed_bytes": 33554432,
+          "sha256": "ce0d693190772ecbe35ba346fc9ef50f1b040e42b49a51902552ef7b62fd149d"
+        },
+        {
+          "index": 42,
+          "probe_offset": 12861890396,
+          "frame_start": 12863682793,
+          "frame_end": 12868362581,
+          "compressed_bytes": 4679789,
+          "decompressed_bytes": 33554432,
+          "sha256": "6ce0793e05e3237bb9fdd05ffe8cff96776ba4c2002d9ab1566defc828139c8f"
+        },
+        {
+          "index": 43,
+          "probe_offset": 13200685418,
+          "frame_start": 13201339995,
+          "frame_end": 13206051821,
+          "compressed_bytes": 4711827,
+          "decompressed_bytes": 33554432,
+          "sha256": "dbcfafd89261856da2cfed33090a651d5eb7fda6952ab17a7ace07ac6a08d7cb"
+        },
+        {
+          "index": 44,
+          "probe_offset": 13487441543,
+          "frame_start": 13489277549,
+          "frame_end": 13494002335,
+          "compressed_bytes": 4724787,
+          "decompressed_bytes": 33554432,
+          "sha256": "75058042e862a77fb875edf6a841ddd6767935437e5617bdf245855bc501dc68"
+        },
+        {
+          "index": 45,
+          "probe_offset": 13902499047,
+          "frame_start": 13906418238,
+          "frame_end": 13911126125,
+          "compressed_bytes": 4707888,
+          "decompressed_bytes": 33554432,
+          "sha256": "42c494999fc6254a6899ce923da2e80e6917248d585b12f7d9bf434be4053bc7"
+        },
+        {
+          "index": 46,
+          "probe_offset": 14157547427,
+          "frame_start": 14161781962,
+          "frame_end": 14166520264,
+          "compressed_bytes": 4738303,
+          "decompressed_bytes": 33554432,
+          "sha256": "c67e201628657a7bb4e0698a547cbf9100cc1e4cbe883a3415d79501468bf384"
+        },
+        {
+          "index": 47,
+          "probe_offset": 14364295343,
+          "frame_start": 14365101183,
+          "frame_end": 14369816288,
+          "compressed_bytes": 4715106,
+          "decompressed_bytes": 33554432,
+          "sha256": "b9c25ddefa6d61691c2265e23fca192ec6d4ecab312453ccb5077fd721faca18"
+        },
+        {
+          "index": 48,
+          "probe_offset": 14596699433,
+          "frame_start": 14596726792,
+          "frame_end": 14601428325,
+          "compressed_bytes": 4701534,
+          "decompressed_bytes": 33554432,
+          "sha256": "5e2ac7faca1e58f3323689cbe7123edef704de6ed2903fff4145db5b2ef0d29c"
+        },
+        {
+          "index": 49,
+          "probe_offset": 14972901305,
+          "frame_start": 14976347523,
+          "frame_end": 14981058722,
+          "compressed_bytes": 4711200,
+          "decompressed_bytes": 33554432,
+          "sha256": "9048572530193eca4b84ad15d4efe5e328a40e1529708756224e169652aad3a4"
+        },
+        {
+          "index": 50,
+          "probe_offset": 15354136114,
+          "frame_start": 15358730718,
+          "frame_end": 15363449826,
+          "compressed_bytes": 4719109,
+          "decompressed_bytes": 33554432,
+          "sha256": "f7ed76a704f4146590a17314e110a9418646f7d7367bdce871e8342f25ba388f"
+        },
+        {
+          "index": 51,
+          "probe_offset": 15559052566,
+          "frame_start": 15561647521,
+          "frame_end": 15566356036,
+          "compressed_bytes": 4708516,
+          "decompressed_bytes": 33554432,
+          "sha256": "9385570a5d8af5bd62f89244321232bda63bb80799ecef29974f965ef7c4c22f"
+        },
+        {
+          "index": 52,
+          "probe_offset": 15961106388,
+          "frame_start": 15965782326,
+          "frame_end": 15970509261,
+          "compressed_bytes": 4726936,
+          "decompressed_bytes": 33554432,
+          "sha256": "f8da4eb4d308b1b63dcebb28d4feb3f3f1fda8d03c8aa26be785bc0c802acae5"
+        },
+        {
+          "index": 53,
+          "probe_offset": 16071257116,
+          "frame_start": 16074443067,
+          "frame_end": 16079173916,
+          "compressed_bytes": 4730850,
+          "decompressed_bytes": 33554432,
+          "sha256": "5a8027fb7d85c90518b2d0d20d3e5ccff3160cc5fb3f071bed5f00d9bbca90a5"
+        },
+        {
+          "index": 54,
+          "probe_offset": 16622932950,
+          "frame_start": 16626123834,
+          "frame_end": 16630796796,
+          "compressed_bytes": 4672963,
+          "decompressed_bytes": 33554432,
+          "sha256": "0cd94563f8ab05dba6c02753203d6d1debf533a9e6bcbe4f4c82b0e45e122b65"
+        },
+        {
+          "index": 55,
+          "probe_offset": 16708832982,
+          "frame_start": 16710416840,
+          "frame_end": 16715117258,
+          "compressed_bytes": 4700419,
+          "decompressed_bytes": 33554432,
+          "sha256": "f78994844627462f3814869a8547d29da9400f9b0d1cca5092bf37eae2d59b25"
+        },
+        {
+          "index": 56,
+          "probe_offset": 16931269113,
+          "frame_start": 16932507432,
+          "frame_end": 16937240011,
+          "compressed_bytes": 4732580,
+          "decompressed_bytes": 33554432,
+          "sha256": "a3cc449d26b895ecfd858262fe5b3d25b917cdaba7ba7bdbd9050b1355c2e9b4"
+        },
+        {
+          "index": 57,
+          "probe_offset": 17393832067,
+          "frame_start": 17395355584,
+          "frame_end": 17400045440,
+          "compressed_bytes": 4689857,
+          "decompressed_bytes": 33554432,
+          "sha256": "81a0f5cd27e2bbb1e55dac9a2e18ca8493477b29dcab987fcd3d0dd600457869"
+        },
+        {
+          "index": 58,
+          "probe_offset": 17652833311,
+          "frame_start": 17656355843,
+          "frame_end": 17661042513,
+          "compressed_bytes": 4686671,
+          "decompressed_bytes": 33554432,
+          "sha256": "1d0dfe30355a65436868f11974344eee8ef4a06e13be60c396430bc402e47fe1"
+        },
+        {
+          "index": 59,
+          "probe_offset": 18032871654,
+          "frame_start": 18033028539,
+          "frame_end": 18037744742,
+          "compressed_bytes": 4716204,
+          "decompressed_bytes": 33554432,
+          "sha256": "8c8cd548224a56097614617754a3f651e7f3d94d1c9918aeba17f81a16ccce69"
+        },
+        {
+          "index": 60,
+          "probe_offset": 18366346521,
+          "frame_start": 18367800190,
+          "frame_end": 18372485033,
+          "compressed_bytes": 4684844,
+          "decompressed_bytes": 33554432,
+          "sha256": "108342e25af91a67ba1057ba3368836314d63a1ab33678a5cb9b4e5625d7fd9b"
+        },
+        {
+          "index": 61,
+          "probe_offset": 18510720273,
+          "frame_start": 18512968794,
+          "frame_end": 18517636713,
+          "compressed_bytes": 4667920,
+          "decompressed_bytes": 33554432,
+          "sha256": "e8d81c180b9d01c213f1f7bfeb9244914f1ee2bb7687258cc48527e276d2bf93"
+        },
+        {
+          "index": 62,
+          "probe_offset": 18902082886,
+          "frame_start": 18903052486,
+          "frame_end": 18907769529,
+          "compressed_bytes": 4717044,
+          "decompressed_bytes": 33554432,
+          "sha256": "a4fa817b51072213a3b9447547a4d5b64a647e3a94a1a0551c4597884564f7d0"
+        },
+        {
+          "index": 63,
+          "probe_offset": 19111138628,
+          "frame_start": 19115428780,
+          "frame_end": 19120146522,
+          "compressed_bytes": 4717743,
+          "decompressed_bytes": 33554432,
+          "sha256": "845a196b77918c67d479f48b318861215410b9fadcb0fbae7e959b03bad20e4b"
+        },
+        {
+          "index": 64,
+          "probe_offset": 19642016503,
+          "frame_start": 19645313583,
+          "frame_end": 19650016631,
+          "compressed_bytes": 4703049,
+          "decompressed_bytes": 33554432,
+          "sha256": "1f54729a5a34efa7c243a21fc85ff1e84ef18a1743671f80e562597f688981d1"
+        },
+        {
+          "index": 65,
+          "probe_offset": 19720759495,
+          "frame_start": 19725367748,
+          "frame_end": 19730083893,
+          "compressed_bytes": 4716146,
+          "decompressed_bytes": 33554432,
+          "sha256": "afddf337ea7dd89dfbf1de22dce4718df182e470e8291036aff943134e3c2678"
+        },
+        {
+          "index": 66,
+          "probe_offset": 20006727594,
+          "frame_start": 20008409555,
+          "frame_end": 20013124881,
+          "compressed_bytes": 4715327,
+          "decompressed_bytes": 33554432,
+          "sha256": "e8c17ce1948ca231aa660d4296f19822f7f8315db253d5c698f727c45e1e22d8"
+        },
+        {
+          "index": 67,
+          "probe_offset": 20344981026,
+          "frame_start": 20347234043,
+          "frame_end": 20351910593,
+          "compressed_bytes": 4676551,
+          "decompressed_bytes": 33554432,
+          "sha256": "358d288ec4de94e9d3683b486871459bc4eb492de34091f4ca91e0f7d34235d3"
+        },
+        {
+          "index": 68,
+          "probe_offset": 20768925637,
+          "frame_start": 20769468715,
+          "frame_end": 20774186697,
+          "compressed_bytes": 4717983,
+          "decompressed_bytes": 33554432,
+          "sha256": "2cceb96699948fce095d2a729f867e841dd752769b2984437113d77b939b1000"
+        },
+        {
+          "index": 69,
+          "probe_offset": 21068134029,
+          "frame_start": 21071658645,
+          "frame_end": 21076386426,
+          "compressed_bytes": 4727782,
+          "decompressed_bytes": 33554432,
+          "sha256": "8374d98de6e2fb4205953c63d2da16c5d312b6d12c3228aa9c6d62c228387027"
+        },
+        {
+          "index": 70,
+          "probe_offset": 21288718849,
+          "frame_start": 21292970587,
+          "frame_end": 21297642256,
+          "compressed_bytes": 4671670,
+          "decompressed_bytes": 33554432,
+          "sha256": "e06111c46e10b503a0f30ad3885b090a3b1e5ece267edcfbc6e7bae2b4905bfc"
+        },
+        {
+          "index": 71,
+          "probe_offset": 21699791457,
+          "frame_start": 21701152325,
+          "frame_end": 21705879419,
+          "compressed_bytes": 4727095,
+          "decompressed_bytes": 33554432,
+          "sha256": "c9df707eedd006d2dd47dd03ece378e3212599782348dcdb83424e9d086294da"
+        },
+        {
+          "index": 72,
+          "probe_offset": 21958602089,
+          "frame_start": 21960751277,
+          "frame_end": 21965474245,
+          "compressed_bytes": 4722969,
+          "decompressed_bytes": 33554432,
+          "sha256": "deb07314de1446cee68286ca5eb77947f5651fb696d829062d0b50adddc4eb78"
+        },
+        {
+          "index": 73,
+          "probe_offset": 22347468603,
+          "frame_start": 22351508692,
+          "frame_end": 22356214688,
+          "compressed_bytes": 4705997,
+          "decompressed_bytes": 33554432,
+          "sha256": "651e27517157e9fefc2fe81699c2b663c63106f9a19df69dc6be62662ab503ba"
+        },
+        {
+          "index": 74,
+          "probe_offset": 22480993321,
+          "frame_start": 22482990384,
+          "frame_end": 22487708086,
+          "compressed_bytes": 4717703,
+          "decompressed_bytes": 33554432,
+          "sha256": "f38e942352a28e439166749236a15234a89df37b04fa7497703a889530b1c1cd"
+        },
+        {
+          "index": 75,
+          "probe_offset": 22946703027,
+          "frame_start": 22951222552,
+          "frame_end": 22955923459,
+          "compressed_bytes": 4700908,
+          "decompressed_bytes": 33554432,
+          "sha256": "86f0c1f7877953cf3523ed5a374914c3e7d7c8d4a8e8c4109488d44833044d9b"
+        },
+        {
+          "index": 76,
+          "probe_offset": 23237664529,
+          "frame_start": 23242298673,
+          "frame_end": 23246965844,
+          "compressed_bytes": 4667172,
+          "decompressed_bytes": 33554432,
+          "sha256": "ce9533858cd2199a4cfb0fda6457f1af4b13bd8867d7ef4b07cf51066678fb5f"
+        },
+        {
+          "index": 77,
+          "probe_offset": 23442897473,
+          "frame_start": 23444577672,
+          "frame_end": 23449310481,
+          "compressed_bytes": 4732810,
+          "decompressed_bytes": 33554432,
+          "sha256": "f4e4eff0cb98d4f9030ce3e121337a52703bf5a473ab725e4bca3827be1dd737"
+        },
+        {
+          "index": 78,
+          "probe_offset": 23822619851,
+          "frame_start": 23823376295,
+          "frame_end": 23828111150,
+          "compressed_bytes": 4734856,
+          "decompressed_bytes": 33554432,
+          "sha256": "0842f041826753f575afdd412c3f95db459fd099d43f7f5b992e43507c3e3b48"
+        },
+        {
+          "index": 79,
+          "probe_offset": 24074771823,
+          "frame_start": 24078222669,
+          "frame_end": 24082917098,
+          "compressed_bytes": 4694430,
+          "decompressed_bytes": 33554432,
+          "sha256": "a27e706412dba5dcc3cec15a212f101016f398ed45b19327ab043fd6f2f20914"
+        },
+        {
+          "index": 80,
+          "probe_offset": 24278733599,
+          "frame_start": 24279001653,
+          "frame_end": 24283660169,
+          "compressed_bytes": 4658517,
+          "decompressed_bytes": 33554432,
+          "sha256": "18360c2510077ad6eb9e46d908f1758597e44eaa3933b661092364b6814db0a2"
+        },
+        {
+          "index": 81,
+          "probe_offset": 24579271575,
+          "frame_start": 24579681333,
+          "frame_end": 24584388998,
+          "compressed_bytes": 4707666,
+          "decompressed_bytes": 33554432,
+          "sha256": "7e39e9182d9d9289b28df741bc7c5a9cff09c907fa27b29c76afa29de156303a"
+        },
+        {
+          "index": 82,
+          "probe_offset": 24823974971,
+          "frame_start": 24825054602,
+          "frame_end": 24829781359,
+          "compressed_bytes": 4726758,
+          "decompressed_bytes": 33554432,
+          "sha256": "b8c96b4b236c8c1f7030c933b90a158de6922c498c2e3bf129afe26b4b886cdc"
+        },
+        {
+          "index": 83,
+          "probe_offset": 25175832839,
+          "frame_start": 25177043615,
+          "frame_end": 25181724708,
+          "compressed_bytes": 4681094,
+          "decompressed_bytes": 33554432,
+          "sha256": "44a25447a6e8a8eb883d80f7e41357495101f13d3f7d688ca28f823fb250b0e0"
+        },
+        {
+          "index": 84,
+          "probe_offset": 25502488887,
+          "frame_start": 25505254155,
+          "frame_end": 25509963719,
+          "compressed_bytes": 4709565,
+          "decompressed_bytes": 33554432,
+          "sha256": "4b681409af59deab7611fd1dc73a84d722e68648ec142db919bb742b6dcbdcce"
+        },
+        {
+          "index": 85,
+          "probe_offset": 25778212697,
+          "frame_start": 25778710007,
+          "frame_end": 25783421139,
+          "compressed_bytes": 4711133,
+          "decompressed_bytes": 33554432,
+          "sha256": "e3838cdff79fafa233302294aca35ba4da192ad4c64df8fd699db120e383d7fd"
+        },
+        {
+          "index": 86,
+          "probe_offset": 26223901693,
+          "frame_start": 26224597681,
+          "frame_end": 26229246651,
+          "compressed_bytes": 4648971,
+          "decompressed_bytes": 33554432,
+          "sha256": "09e1dd97c19a01a1ea8c403edb4122e21df95e10f7f6eadb1ba190e72e1d7a81"
+        },
+        {
+          "index": 87,
+          "probe_offset": 26441687368,
+          "frame_start": 26444923663,
+          "frame_end": 26449641549,
+          "compressed_bytes": 4717887,
+          "decompressed_bytes": 33554432,
+          "sha256": "326a86510442a352b88159bb579f27e2abc610b22dd54031ea5bb57ee3fc0327"
+        },
+        {
+          "index": 88,
+          "probe_offset": 26838638915,
+          "frame_start": 26840711114,
+          "frame_end": 26845413772,
+          "compressed_bytes": 4702659,
+          "decompressed_bytes": 33554432,
+          "sha256": "1205014a11578523f5da9b0f6980eda35343b7fb0e88498c49ed76c35f5f5297"
+        },
+        {
+          "index": 89,
+          "probe_offset": 27163568660,
+          "frame_start": 27163722829,
+          "frame_end": 27168375969,
+          "compressed_bytes": 4653141,
+          "decompressed_bytes": 33554432,
+          "sha256": "5569ec61021ebb717e6aad02f47b7beb526884fab27f666cbefe5b3c4a196633"
+        },
+        {
+          "index": 90,
+          "probe_offset": 27251503231,
+          "frame_start": 27252217865,
+          "frame_end": 27256878171,
+          "compressed_bytes": 4660307,
+          "decompressed_bytes": 33554432,
+          "sha256": "e1622a1411a122f0ca6c974d73f9aed2e7bdc47ed92f7ba0d13aa75b0530821b"
+        },
+        {
+          "index": 91,
+          "probe_offset": 27714457899,
+          "frame_start": 27717364076,
+          "frame_end": 27722071023,
+          "compressed_bytes": 4706948,
+          "decompressed_bytes": 33554432,
+          "sha256": "77a0be5dd9d08f70ee81b679972702254cadbf48f52222fe35012486a21fbdf1"
+        },
+        {
+          "index": 92,
+          "probe_offset": 28047608998,
+          "frame_start": 28050929969,
+          "frame_end": 28055603968,
+          "compressed_bytes": 4674000,
+          "decompressed_bytes": 33554432,
+          "sha256": "6bac6f25bb17bcb7630023cb4a1892c225f98bfa154820998ed8c3438057b02b"
+        },
+        {
+          "index": 93,
+          "probe_offset": 28280359887,
+          "frame_start": 28283916015,
+          "frame_end": 28288588846,
+          "compressed_bytes": 4672832,
+          "decompressed_bytes": 33554432,
+          "sha256": "0415384c61f4133de9ff51a632229c5f44f5eba5822d83d51f4b43bd1c2539ed"
+        },
+        {
+          "index": 94,
+          "probe_offset": 28605172097,
+          "frame_start": 28608139277,
+          "frame_end": 28612865764,
+          "compressed_bytes": 4726488,
+          "decompressed_bytes": 33554432,
+          "sha256": "32bb4c92e8e80739122956c6d6dc97bff694c0c8a2ef51f68c2fd0e5bedfe4de"
+        },
+        {
+          "index": 95,
+          "probe_offset": 29003010962,
+          "frame_start": 29007306424,
+          "frame_end": 29011974078,
+          "compressed_bytes": 4667655,
+          "decompressed_bytes": 33554432,
+          "sha256": "8aee7b762c3100bef87da4111aeafe1e32c17dbbd7e0da9510eeb8e27f4008f6"
+        }
+      ]
+    },
+    "test": {
+      "source": {
+        "month": "2026-08",
+        "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-08.pgn.zst",
+        "bytes": 30145862359,
+        "etag": "\"6aa282bd-704d55ad7\"",
+        "last_modified": "Thu, 10 Sep 2026 10:13:17 GMT",
+        "chunks": 96,
+        "seed": 20260915,
+        "sampling": "one complete pzstd frame after a seeded random byte offset in each equal-byte stratum"
+      },
+      "frames": [
+        {
+          "index": 0,
+          "probe_offset": 18168980,
+          "frame_start": 18479674,
+          "frame_end": 23096067,
+          "compressed_bytes": 4616394,
+          "decompressed_bytes": 33554432,
+          "sha256": "2647657633c533d47d936b803b687c21a0576b595af724f327750945463319ed"
+        },
+        {
+          "index": 1,
+          "probe_offset": 532876573,
+          "frame_start": 536337930,
+          "frame_end": 541035835,
+          "compressed_bytes": 4697906,
+          "decompressed_bytes": 33554432,
+          "sha256": "f34985d39c1dfc8690e76cbad377fe6bba1eaf40724389c330daa2c817c9084f"
+        },
+        {
+          "index": 2,
+          "probe_offset": 867213749,
+          "frame_start": 869136446,
+          "frame_end": 873807804,
+          "compressed_bytes": 4671359,
+          "decompressed_bytes": 33554432,
+          "sha256": "eb9423062e84e3a3f4d73626a4206eabf9eb29e4ded2065d652d3fe4a343a1f0"
+        },
+        {
+          "index": 3,
+          "probe_offset": 1237975770,
+          "frame_start": 1238818807,
+          "frame_end": 1243535934,
+          "compressed_bytes": 4717128,
+          "decompressed_bytes": 33554432,
+          "sha256": "ad43dc84c60a3f76de6cc7c950d2a53d6dc45f4b2ad04a5ce70d3cf8ebad0b5c"
+        },
+        {
+          "index": 4,
+          "probe_offset": 1524326729,
+          "frame_start": 1527764963,
+          "frame_end": 1532517762,
+          "compressed_bytes": 4752800,
+          "decompressed_bytes": 33554432,
+          "sha256": "77de6329bf430c66562b8c7711b28573f08956fb0d1c5dcd96809d24f50b1f05"
+        },
+        {
+          "index": 5,
+          "probe_offset": 1824401040,
+          "frame_start": 1825899917,
+          "frame_end": 1830614572,
+          "compressed_bytes": 4714656,
+          "decompressed_bytes": 33554432,
+          "sha256": "a223dec3a6a0561ffd3b3c2acbd3151f8a3e6e3434370908939753682126e976"
+        },
+        {
+          "index": 6,
+          "probe_offset": 2063630773,
+          "frame_start": 2065031490,
+          "frame_end": 2069706082,
+          "compressed_bytes": 4674593,
+          "decompressed_bytes": 33554432,
+          "sha256": "0b1838b17f647b300d2c9a19b386c627a93c3b4f6448adff6da7b3c082d1da23"
+        },
+        {
+          "index": 7,
+          "probe_offset": 2415036163,
+          "frame_start": 2417985295,
+          "frame_end": 2422717397,
+          "compressed_bytes": 4732103,
+          "decompressed_bytes": 33554432,
+          "sha256": "bdfc1b81367724eb56140c82a554b8ee4cb91b059e244cca160da92d8b2d6edc"
+        },
+        {
+          "index": 8,
+          "probe_offset": 2610115930,
+          "frame_start": 2611571939,
+          "frame_end": 2616294711,
+          "compressed_bytes": 4722773,
+          "decompressed_bytes": 33554432,
+          "sha256": "55d1f759f05baba5164869682a86041d09cd2bc28a955b2ca82ff852174bd64a"
+        },
+        {
+          "index": 9,
+          "probe_offset": 3124410766,
+          "frame_start": 3128162282,
+          "frame_end": 3132859258,
+          "compressed_bytes": 4696977,
+          "decompressed_bytes": 33554432,
+          "sha256": "86084382d48195c1d823aa13156dbb6517c9f04a52b7aef82cf6680bbdf14433"
+        },
+        {
+          "index": 10,
+          "probe_offset": 3307148836,
+          "frame_start": 3307233364,
+          "frame_end": 3311953305,
+          "compressed_bytes": 4719942,
+          "decompressed_bytes": 33554432,
+          "sha256": "d5569ca31bdb4441b290d92b68b130a83cc90a5e900f8a2f97a627c1378808f2"
+        },
+        {
+          "index": 11,
+          "probe_offset": 3708454247,
+          "frame_start": 3708983139,
+          "frame_end": 3713702455,
+          "compressed_bytes": 4719317,
+          "decompressed_bytes": 33554432,
+          "sha256": "53a9d3b5db99f9059436580bf451942c70c2d21b752a020d5725441297ac7cc2"
+        },
+        {
+          "index": 12,
+          "probe_offset": 3767776689,
+          "frame_start": 3770340801,
+          "frame_end": 3775061496,
+          "compressed_bytes": 4720696,
+          "decompressed_bytes": 33554432,
+          "sha256": "9b04155a1d0b34d489fd50b7474ba072317a4fdbbe8ed6cd1f2dbc497da3d5f8"
+        },
+        {
+          "index": 13,
+          "probe_offset": 4317837773,
+          "frame_start": 4319882725,
+          "frame_end": 4324611237,
+          "compressed_bytes": 4728513,
+          "decompressed_bytes": 33554432,
+          "sha256": "a4b8c5ffd804ea4dc060f52be9c3870846fb65dd2ca6ecfcd12f86a25051e620"
+        },
+        {
+          "index": 14,
+          "probe_offset": 4521070409,
+          "frame_start": 4523031802,
+          "frame_end": 4527738972,
+          "compressed_bytes": 4707171,
+          "decompressed_bytes": 33554432,
+          "sha256": "966de6295b6f7695e03c1a801f13bc582ded0833fdb3b9f381687a4cc03327d5"
+        },
+        {
+          "index": 15,
+          "probe_offset": 4854196578,
+          "frame_start": 4857868861,
+          "frame_end": 4862556779,
+          "compressed_bytes": 4687919,
+          "decompressed_bytes": 33554432,
+          "sha256": "58db78e0ad115012d1427ebca7cf09be3ca7a43cd97a53b42ff9983c89caedc5"
+        },
+        {
+          "index": 16,
+          "probe_offset": 5076159464,
+          "frame_start": 5077771917,
+          "frame_end": 5082476916,
+          "compressed_bytes": 4705000,
+          "decompressed_bytes": 33554432,
+          "sha256": "b1161b7304924ace472d10b13f2936e764c4e6503a9f9c42e8a96fb175e0999f"
+        },
+        {
+          "index": 17,
+          "probe_offset": 5470275569,
+          "frame_start": 5474156693,
+          "frame_end": 5478882296,
+          "compressed_bytes": 4725604,
+          "decompressed_bytes": 33554432,
+          "sha256": "215e163fca997c5e61441aa0bd13b09d2e8af93dc920d0580e6fc7d16dfc5ec3"
+        },
+        {
+          "index": 18,
+          "probe_offset": 5835155093,
+          "frame_start": 5837857839,
+          "frame_end": 5842544464,
+          "compressed_bytes": 4686626,
+          "decompressed_bytes": 33554432,
+          "sha256": "2658ca41d14eccb9d048d03352da168580058480979bf6f095dee3a44cfce468"
+        },
+        {
+          "index": 19,
+          "probe_offset": 6121687532,
+          "frame_start": 6123802190,
+          "frame_end": 6128510316,
+          "compressed_bytes": 4708127,
+          "decompressed_bytes": 33554432,
+          "sha256": "c9a8ecf23f2c350658542e8e7fd4fc44edfaa4f0c96ec9e3e7803c59a8a2f691"
+        },
+        {
+          "index": 20,
+          "probe_offset": 6349639576,
+          "frame_start": 6350275264,
+          "frame_end": 6354993534,
+          "compressed_bytes": 4718271,
+          "decompressed_bytes": 33554432,
+          "sha256": "e40d15e4900022443ec55f71986af1e18b904a65989f923f0fd09c32bc2785ed"
+        },
+        {
+          "index": 21,
+          "probe_offset": 6829572449,
+          "frame_start": 6831831483,
+          "frame_end": 6836516258,
+          "compressed_bytes": 4684776,
+          "decompressed_bytes": 33554432,
+          "sha256": "27bf41c94cf7e1bf3e328d4a263fb5abc928bce0d63e522e08e8b46d3dc1c89f"
+        },
+        {
+          "index": 22,
+          "probe_offset": 6909737558,
+          "frame_start": 6911598204,
+          "frame_end": 6916283394,
+          "compressed_bytes": 4685191,
+          "decompressed_bytes": 33554432,
+          "sha256": "9ebfaa24ec0f5a7a5b8cf4f2d3956c80f3754c7845f5be8bafecf0ae2d0bbe6e"
+        },
+        {
+          "index": 23,
+          "probe_offset": 7403651929,
+          "frame_start": 7407943150,
+          "frame_end": 7412680655,
+          "compressed_bytes": 4737506,
+          "decompressed_bytes": 33554432,
+          "sha256": "4bcc500472998591baa5958b81f880534c6490ec1a57f755b34db33a340ae2ea"
+        },
+        {
+          "index": 24,
+          "probe_offset": 7622546088,
+          "frame_start": 7625153400,
+          "frame_end": 7629871742,
+          "compressed_bytes": 4718343,
+          "decompressed_bytes": 33554432,
+          "sha256": "93ecd65de9ebad99aa15f3ced684ceca26eeb66622cd8d04abfd7d9ae9f2c607"
+        },
+        {
+          "index": 25,
+          "probe_offset": 7930269215,
+          "frame_start": 7930437421,
+          "frame_end": 7935169129,
+          "compressed_bytes": 4731709,
+          "decompressed_bytes": 33554432,
+          "sha256": "51076bd4be2a89023e2101ce477792a7bb5bea3b077e2bf9733e3a89d01120dd"
+        },
+        {
+          "index": 26,
+          "probe_offset": 8196443256,
+          "frame_start": 8200477836,
+          "frame_end": 8205223399,
+          "compressed_bytes": 4745564,
+          "decompressed_bytes": 33554432,
+          "sha256": "2214ca9d6b488e85e66b56cfecf8f6ad5f033eaf95147a24a594172219156cf7"
+        },
+        {
+          "index": 27,
+          "probe_offset": 8478521331,
+          "frame_start": 8479725438,
+          "frame_end": 8484439112,
+          "compressed_bytes": 4713675,
+          "decompressed_bytes": 33554432,
+          "sha256": "c56b0b627246f16682980476a517b34fd31dd19c48754e16e8957365c25483e2"
+        },
+        {
+          "index": 28,
+          "probe_offset": 8885659929,
+          "frame_start": 8888211532,
+          "frame_end": 8892896039,
+          "compressed_bytes": 4684508,
+          "decompressed_bytes": 33554432,
+          "sha256": "966cb88dc3d46d24635ce9fe1a8d477f80c6b4a5709f400f5b2ad2a8e1d9949c"
+        },
+        {
+          "index": 29,
+          "probe_offset": 9197612664,
+          "frame_start": 9199257878,
+          "frame_end": 9203976359,
+          "compressed_bytes": 4718482,
+          "decompressed_bytes": 33554432,
+          "sha256": "9f6f60bb165e3cea6ba983c07192c86db968e9c85dbba67b656bafe6399d0859"
+        },
+        {
+          "index": 30,
+          "probe_offset": 9590113421,
+          "frame_start": 9591011715,
+          "frame_end": 9595724329,
+          "compressed_bytes": 4712615,
+          "decompressed_bytes": 33554432,
+          "sha256": "dd0ed7da951ae0139e9eddc42f009328bfe1f59d77ddcfb33255f23f4979eaf0"
+        },
+        {
+          "index": 31,
+          "probe_offset": 10005933857,
+          "frame_start": 10008611802,
+          "frame_end": 10013331736,
+          "compressed_bytes": 4719935,
+          "decompressed_bytes": 33554432,
+          "sha256": "1e367bd013c92b5b3f1e057e9aa485ab55a1da631b6b75019d663cd96cbb47c4"
+        },
+        {
+          "index": 32,
+          "probe_offset": 10208714123,
+          "frame_start": 10211726718,
+          "frame_end": 10216454563,
+          "compressed_bytes": 4727846,
+          "decompressed_bytes": 33554432,
+          "sha256": "d87d55fedc67701f4042c7db54dbdf4643211deacd5313518b06b58fa7e9f70f"
+        },
+        {
+          "index": 33,
+          "probe_offset": 10388041409,
+          "frame_start": 10391187626,
+          "frame_end": 10395905459,
+          "compressed_bytes": 4717834,
+          "decompressed_bytes": 33554432,
+          "sha256": "a3293b9ce8d9d873de8805fc5465901ea39ad70dd1992a9430f3c33080c71342"
+        },
+        {
+          "index": 34,
+          "probe_offset": 10743654372,
+          "frame_start": 10744032214,
+          "frame_end": 10748704387,
+          "compressed_bytes": 4672174,
+          "decompressed_bytes": 33554432,
+          "sha256": "1c7f5f00011e6babeee8bbaa0240f116941cfd4ad1de7f9f36e43310e9f6c609"
+        },
+        {
+          "index": 35,
+          "probe_offset": 11172765730,
+          "frame_start": 11177085350,
+          "frame_end": 11181818176,
+          "compressed_bytes": 4732827,
+          "decompressed_bytes": 33554432,
+          "sha256": "e237dd950c1dcae370e701da75683eb8415985e02d3da47e7e72a7132a769319"
+        },
+        {
+          "index": 36,
+          "probe_offset": 11514127320,
+          "frame_start": 11516987706,
+          "frame_end": 11521703812,
+          "compressed_bytes": 4716107,
+          "decompressed_bytes": 33554432,
+          "sha256": "face2989679b0e545f3e38716b005358336a9e41805a73d12fe33c69ea054bdc"
+        },
+        {
+          "index": 37,
+          "probe_offset": 11870023090,
+          "frame_start": 11873285177,
+          "frame_end": 11877999202,
+          "compressed_bytes": 4714026,
+          "decompressed_bytes": 33554432,
+          "sha256": "f02cf944c51a4da22c4c7a37c7d1fcb42f173444026ecb55d4444380dc0f44f0"
+        },
+        {
+          "index": 38,
+          "probe_offset": 12069214412,
+          "frame_start": 12071463248,
+          "frame_end": 12076189766,
+          "compressed_bytes": 4726519,
+          "decompressed_bytes": 33554432,
+          "sha256": "c4bf85f2c37962ea957d38a244388039f9b32ba71a92d3df3f8d59fe6cba4dab"
+        },
+        {
+          "index": 39,
+          "probe_offset": 12406114703,
+          "frame_start": 12406835810,
+          "frame_end": 12411557298,
+          "compressed_bytes": 4721489,
+          "decompressed_bytes": 33554432,
+          "sha256": "30fbc898d9fc44615bda4f3edec79f34fee6004391d7bf21e4e45f9f9d78d2a1"
+        },
+        {
+          "index": 40,
+          "probe_offset": 12719743493,
+          "frame_start": 12721610734,
+          "frame_end": 12726321586,
+          "compressed_bytes": 4710853,
+          "decompressed_bytes": 33554432,
+          "sha256": "6cb4a6b9844985f7cd68c77ea0a2efd4925ee89f5fc67282df37f54bdae90d7b"
+        },
+        {
+          "index": 41,
+          "probe_offset": 12863276083,
+          "frame_start": 12867380958,
+          "frame_end": 12872097044,
+          "compressed_bytes": 4716087,
+          "decompressed_bytes": 33554432,
+          "sha256": "0663e1193d5686200ccd1874c4d11866acf4d6eeac43086151ad9950dab59f20"
+        },
+        {
+          "index": 42,
+          "probe_offset": 13457561155,
+          "frame_start": 13457941685,
+          "frame_end": 13462657322,
+          "compressed_bytes": 4715638,
+          "decompressed_bytes": 33554432,
+          "sha256": "7ff572fcb3832c1163d2b7b30247ea396e8f6f68cb2b4a32570fb8256a3a1b42"
+        },
+        {
+          "index": 43,
+          "probe_offset": 13702991691,
+          "frame_start": 13706629438,
+          "frame_end": 13711324011,
+          "compressed_bytes": 4694574,
+          "decompressed_bytes": 33554432,
+          "sha256": "dd70c20e6280bb01744b93965ca868ef4880748f2c40016301885cee7d64a221"
+        },
+        {
+          "index": 44,
+          "probe_offset": 13964666238,
+          "frame_start": 13966504159,
+          "frame_end": 13971246331,
+          "compressed_bytes": 4742173,
+          "decompressed_bytes": 33554432,
+          "sha256": "ca6783b470e7227a56947edd775e73a477bca7c96f1b728f4150da51cbe2d334"
+        },
+        {
+          "index": 45,
+          "probe_offset": 14274561349,
+          "frame_start": 14274584721,
+          "frame_end": 14279300632,
+          "compressed_bytes": 4715912,
+          "decompressed_bytes": 33554432,
+          "sha256": "3d6934965f2ded49b4aa086f54f5671312eb54bf4c42169ea57ab79551cac2e0"
+        },
+        {
+          "index": 46,
+          "probe_offset": 14507213493,
+          "frame_start": 14510135291,
+          "frame_end": 14514808089,
+          "compressed_bytes": 4672799,
+          "decompressed_bytes": 33554432,
+          "sha256": "3a7923e642bd81f76f3b0033724e5b1d7417c3429e84419f5807ad960a947b01"
+        },
+        {
+          "index": 47,
+          "probe_offset": 14810507791,
+          "frame_start": 14811614829,
+          "frame_end": 14816348475,
+          "compressed_bytes": 4733647,
+          "decompressed_bytes": 33554432,
+          "sha256": "635c10e716342bcaa53c9b1dbb3215693d0ad8c33d4179ffb180349791643ab1"
+        },
+        {
+          "index": 48,
+          "probe_offset": 15113627511,
+          "frame_start": 15115120386,
+          "frame_end": 15119864191,
+          "compressed_bytes": 4743806,
+          "decompressed_bytes": 33554432,
+          "sha256": "d937de4f2bc437a998a735dca9e47a4064938e96b6d760357468ec4a771a226c"
+        },
+        {
+          "index": 49,
+          "probe_offset": 15480281572,
+          "frame_start": 15483035075,
+          "frame_end": 15487728259,
+          "compressed_bytes": 4693185,
+          "decompressed_bytes": 33554432,
+          "sha256": "6fdf13cb4bd558228c0597ae43393b650fec8f880fe5bac9002046a093e04118"
+        },
+        {
+          "index": 50,
+          "probe_offset": 15978608786,
+          "frame_start": 15981762022,
+          "frame_end": 15986497066,
+          "compressed_bytes": 4735045,
+          "decompressed_bytes": 33554432,
+          "sha256": "31da31e7724d660273d7a765245790df5ee726e3675f1f734ba833ae365f3ca1"
+        },
+        {
+          "index": 51,
+          "probe_offset": 16290140721,
+          "frame_start": 16293467485,
+          "frame_end": 16298195262,
+          "compressed_bytes": 4727778,
+          "decompressed_bytes": 33554432,
+          "sha256": "49174e9f5812a6b03cbe7ea5722fa7070ebd3dc5f79c70e605ea6acb223d53bf"
+        },
+        {
+          "index": 52,
+          "probe_offset": 16344120576,
+          "frame_start": 16345319546,
+          "frame_end": 16350031521,
+          "compressed_bytes": 4711976,
+          "decompressed_bytes": 33554432,
+          "sha256": "01b5e928a991057ae342d32b7501afd1123c1526a2c7c3a5cf38390d16650643"
+        },
+        {
+          "index": 53,
+          "probe_offset": 16738634530,
+          "frame_start": 16739405578,
+          "frame_end": 16744126514,
+          "compressed_bytes": 4720937,
+          "decompressed_bytes": 33554432,
+          "sha256": "bb85df6734e6ae7721cbf3b9fbae1192b8d67a5c364706551141b6cd2c88f49c"
+        },
+        {
+          "index": 54,
+          "probe_offset": 17227851152,
+          "frame_start": 17230801005,
+          "frame_end": 17235523137,
+          "compressed_bytes": 4722133,
+          "decompressed_bytes": 33554432,
+          "sha256": "4f6bbb06a1aa71193fe3ea07ab2e8abd34d8984d9c42d2616ca6b71646caacd6"
+        },
+        {
+          "index": 55,
+          "probe_offset": 17368442700,
+          "frame_start": 17372292189,
+          "frame_end": 17377001627,
+          "compressed_bytes": 4709439,
+          "decompressed_bytes": 33554432,
+          "sha256": "4cb0f76347fdfbfb641bf78203d93d0602f383d86082a1c1a575101bdc1bde5b"
+        },
+        {
+          "index": 56,
+          "probe_offset": 17855790824,
+          "frame_start": 17856458350,
+          "frame_end": 17861186233,
+          "compressed_bytes": 4727884,
+          "decompressed_bytes": 33554432,
+          "sha256": "6a360d82a72ea2514ae98b84c8f1c4439cd478a441a33300af8b2f8bf27ec74d"
+        },
+        {
+          "index": 57,
+          "probe_offset": 18181093697,
+          "frame_start": 18182586811,
+          "frame_end": 18187315869,
+          "compressed_bytes": 4729059,
+          "decompressed_bytes": 33554432,
+          "sha256": "ec66c37f4d0babf4a19bcf85051a05192b47812543ad44151323d815c91e4acd"
+        },
+        {
+          "index": 58,
+          "probe_offset": 18420250350,
+          "frame_start": 18422849649,
+          "frame_end": 18427531759,
+          "compressed_bytes": 4682111,
+          "decompressed_bytes": 33554432,
+          "sha256": "cad4255e9bf023ed20321d3665fdd2849d882608a078893e422fbb3a1f7d91ff"
+        },
+        {
+          "index": 59,
+          "probe_offset": 18585270415,
+          "frame_start": 18586643550,
+          "frame_end": 18591305983,
+          "compressed_bytes": 4662434,
+          "decompressed_bytes": 33554432,
+          "sha256": "eb0e108dd17d2ad858891837a33f08818ce918ae61254d0147032a9163480a38"
+        },
+        {
+          "index": 60,
+          "probe_offset": 18908105822,
+          "frame_start": 18911509732,
+          "frame_end": 18916218902,
+          "compressed_bytes": 4709171,
+          "decompressed_bytes": 33554432,
+          "sha256": "eab8f89663556fbb685dbfed127701c1f3edcf5d04e29d8972e24cf1850245aa"
+        },
+        {
+          "index": 61,
+          "probe_offset": 19233400691,
+          "frame_start": 19237556384,
+          "frame_end": 19242284765,
+          "compressed_bytes": 4728382,
+          "decompressed_bytes": 33554432,
+          "sha256": "0057e4fa644f86711ecc384d75322eee8a7136ecd95f18793242724bbb74f8a9"
+        },
+        {
+          "index": 62,
+          "probe_offset": 19657273819,
+          "frame_start": 19661177458,
+          "frame_end": 19665889296,
+          "compressed_bytes": 4711839,
+          "decompressed_bytes": 33554432,
+          "sha256": "1ef78d6be42cd1d2bda6e17e5ab5d7e9d50f109a5f9377c69f113dc26b430f91"
+        },
+        {
+          "index": 63,
+          "probe_offset": 19957457622,
+          "frame_start": 19958532974,
+          "frame_end": 19963270487,
+          "compressed_bytes": 4737514,
+          "decompressed_bytes": 33554432,
+          "sha256": "a5e150a055f0fff28407e381bcafae70cbc1e7a6a49218f743c7f738b5afc76b"
+        },
+        {
+          "index": 64,
+          "probe_offset": 20201114076,
+          "frame_start": 20204637321,
+          "frame_end": 20209365208,
+          "compressed_bytes": 4727888,
+          "decompressed_bytes": 33554432,
+          "sha256": "10f89863d69fb0b27c520c38bb294c7b9d5b1630dd0a7bafb5d11517ac6ccabc"
+        },
+        {
+          "index": 65,
+          "probe_offset": 20544313399,
+          "frame_start": 20548111526,
+          "frame_end": 20552793001,
+          "compressed_bytes": 4681476,
+          "decompressed_bytes": 33554432,
+          "sha256": "c4554fdd4c698ad3996d2f69889dd267945a53264453c5bb4fa3ef3b2cdfca54"
+        },
+        {
+          "index": 66,
+          "probe_offset": 20880935280,
+          "frame_start": 20883133434,
+          "frame_end": 20887875107,
+          "compressed_bytes": 4741674,
+          "decompressed_bytes": 33554432,
+          "sha256": "65250445dfe44a74e5fea16458475cd4da9cc1bfb19efab038982da4d28c3079"
+        },
+        {
+          "index": 67,
+          "probe_offset": 21090609180,
+          "frame_start": 21091840624,
+          "frame_end": 21096557789,
+          "compressed_bytes": 4717166,
+          "decompressed_bytes": 33554432,
+          "sha256": "9f424241397919925162356b346175decad83c49d91b9fb8537064c24363de63"
+        },
+        {
+          "index": 68,
+          "probe_offset": 21432373121,
+          "frame_start": 21435669829,
+          "frame_end": 21440339280,
+          "compressed_bytes": 4669452,
+          "decompressed_bytes": 33554432,
+          "sha256": "3540f7c112d006c7de44a9a10c249d8c5f9826b27294296f94c1337dd0c1866d"
+        },
+        {
+          "index": 69,
+          "probe_offset": 21700088482,
+          "frame_start": 21704200467,
+          "frame_end": 21708924825,
+          "compressed_bytes": 4724359,
+          "decompressed_bytes": 33554432,
+          "sha256": "e8415019492c6da19c22462a0a7aebd8a748351a7192063f0854ac9b02d0b53d"
+        },
+        {
+          "index": 70,
+          "probe_offset": 22079868833,
+          "frame_start": 22083039113,
+          "frame_end": 22087758796,
+          "compressed_bytes": 4719684,
+          "decompressed_bytes": 33554432,
+          "sha256": "a96bbe275409fd3789e5632c68b6c02b8b95bc0cfb7008fd337b9f46fdc1bc66"
+        },
+        {
+          "index": 71,
+          "probe_offset": 22382198609,
+          "frame_start": 22384417742,
+          "frame_end": 22389093002,
+          "compressed_bytes": 4675261,
+          "decompressed_bytes": 33554432,
+          "sha256": "b2b578464abdf04d45672f2f45d32a72d68b80377b3242cf88a2df19e94e1a92"
+        },
+        {
+          "index": 72,
+          "probe_offset": 22672861292,
+          "frame_start": 22675032742,
+          "frame_end": 22679756445,
+          "compressed_bytes": 4723704,
+          "decompressed_bytes": 33554432,
+          "sha256": "830b66e3e5bf9407d0040444762e3fd14dcd1190dfafd1bbaa54786c0adfcf11"
+        },
+        {
+          "index": 73,
+          "probe_offset": 23027595201,
+          "frame_start": 23028992856,
+          "frame_end": 23033723935,
+          "compressed_bytes": 4731080,
+          "decompressed_bytes": 33554432,
+          "sha256": "6d2588d618a699fb65c477cb6f57da821b1bc08862f2d879326d3983ed9dc8bf"
+        },
+        {
+          "index": 74,
+          "probe_offset": 23259643851,
+          "frame_start": 23260086867,
+          "frame_end": 23264780601,
+          "compressed_bytes": 4693735,
+          "decompressed_bytes": 33554432,
+          "sha256": "f7e2bbfdbbbce0c4399fa503f0ae947bde3035011c434150e7cd8516afb68fb9"
+        },
+        {
+          "index": 75,
+          "probe_offset": 23629125383,
+          "frame_start": 23630320237,
+          "frame_end": 23635032528,
+          "compressed_bytes": 4712292,
+          "decompressed_bytes": 33554432,
+          "sha256": "b6bd1b51525d1c53a601c6514f1a9c1831b4e0c19b255426ccaaac6242a786ca"
+        },
+        {
+          "index": 76,
+          "probe_offset": 24118244732,
+          "frame_start": 24121111316,
+          "frame_end": 24125826768,
+          "compressed_bytes": 4715453,
+          "decompressed_bytes": 33554432,
+          "sha256": "fac3bb81cfc65a5dfba4e799467a5840a27acbfdf0e81523a8f5c5cbc6757e48"
+        },
+        {
+          "index": 77,
+          "probe_offset": 24312477531,
+          "frame_start": 24313965810,
+          "frame_end": 24318639668,
+          "compressed_bytes": 4673859,
+          "decompressed_bytes": 33554432,
+          "sha256": "cc1e01f0a06f92a4e7de562a9652a7039fd1ecb144be4d6563a5c7a6f177aa7b"
+        },
+        {
+          "index": 78,
+          "probe_offset": 24709843522,
+          "frame_start": 24713021553,
+          "frame_end": 24717732393,
+          "compressed_bytes": 4710841,
+          "decompressed_bytes": 33554432,
+          "sha256": "9be2e2c1f2ee498462f5d262ff838d45d2d0fa39dc280bea21cdc647a71c1bf7"
+        },
+        {
+          "index": 79,
+          "probe_offset": 24906166145,
+          "frame_start": 24906391799,
+          "frame_end": 24911111561,
+          "compressed_bytes": 4719763,
+          "decompressed_bytes": 33554432,
+          "sha256": "8882daf02273cff80232aa3037def25a3d155a477dbf4f8abfa5af4fedb03d85"
+        },
+        {
+          "index": 80,
+          "probe_offset": 25184859677,
+          "frame_start": 25189556875,
+          "frame_end": 25194267979,
+          "compressed_bytes": 4711105,
+          "decompressed_bytes": 33554432,
+          "sha256": "5fad059aca6d433b81108f7ec08cf8ad68c42a4cb480c030c303399c46786a15"
+        },
+        {
+          "index": 81,
+          "probe_offset": 25693265625,
+          "frame_start": 25696416592,
+          "frame_end": 25701137093,
+          "compressed_bytes": 4720502,
+          "decompressed_bytes": 33554432,
+          "sha256": "f0ccf95ef8d27ac4b6c773e2c7891340b2f143261286b42a86e5bc5a1ea60fc2"
+        },
+        {
+          "index": 82,
+          "probe_offset": 25759359083,
+          "frame_start": 25762409698,
+          "frame_end": 25767124166,
+          "compressed_bytes": 4714469,
+          "decompressed_bytes": 33554432,
+          "sha256": "9807f3bbcec22327d3b6cbf68a497fcec8978c362d9ba8e471baa7f70dc62b78"
+        },
+        {
+          "index": 83,
+          "probe_offset": 26215951418,
+          "frame_start": 26220099827,
+          "frame_end": 26224788327,
+          "compressed_bytes": 4688501,
+          "decompressed_bytes": 33554432,
+          "sha256": "947b7533e9e10a6a26101676f5196fd348b2aafe0bfd2dc09505c056b0e5abef"
+        },
+        {
+          "index": 84,
+          "probe_offset": 26553779018,
+          "frame_start": 26557681128,
+          "frame_end": 26562387544,
+          "compressed_bytes": 4706417,
+          "decompressed_bytes": 33554432,
+          "sha256": "a22f7831ba694e96aee21d6652d15417de8977c2d223328ec91e1cc36e3eaa8f"
+        },
+        {
+          "index": 85,
+          "probe_offset": 26687140259,
+          "frame_start": 26689691559,
+          "frame_end": 26694422584,
+          "compressed_bytes": 4731026,
+          "decompressed_bytes": 33554432,
+          "sha256": "c15d5c636cf8ec26f6346f981c568027b1aa8299a4be9eb1e3dd0525e86f8490"
+        },
+        {
+          "index": 86,
+          "probe_offset": 27203338950,
+          "frame_start": 27204224713,
+          "frame_end": 27208906982,
+          "compressed_bytes": 4682270,
+          "decompressed_bytes": 33554432,
+          "sha256": "f40d2f744b43b6907a3ca347c796f9b599b02aa0907024e0697b0e4b0e864a7d"
+        },
+        {
+          "index": 87,
+          "probe_offset": 27550457871,
+          "frame_start": 27551810179,
+          "frame_end": 27556530048,
+          "compressed_bytes": 4719870,
+          "decompressed_bytes": 33554432,
+          "sha256": "e07fc2fdbbdff701dfd5b85553522f90dd86d652f7d6989dace5883950a5c4b0"
+        },
+        {
+          "index": 88,
+          "probe_offset": 27653557376,
+          "frame_start": 27655786672,
+          "frame_end": 27660504915,
+          "compressed_bytes": 4718244,
+          "decompressed_bytes": 33554432,
+          "sha256": "51f0710b42fee33b93644576fb215654d0528a420e440171d65a685edb2cdaea"
+        },
+        {
+          "index": 89,
+          "probe_offset": 27972274404,
+          "frame_start": 27972461272,
+          "frame_end": 27977169026,
+          "compressed_bytes": 4707755,
+          "decompressed_bytes": 33554432,
+          "sha256": "86a59b7788ebf6173bffc815b7498b52f5cec7391a7e9af4abbbd0c00de84a80"
+        },
+        {
+          "index": 90,
+          "probe_offset": 28534573346,
+          "frame_start": 28537207314,
+          "frame_end": 28541942138,
+          "compressed_bytes": 4734825,
+          "decompressed_bytes": 33554432,
+          "sha256": "3872a9b02b3fa848467894a9404e714947eca886b8f952f05248acf69b6794c3"
+        },
+        {
+          "index": 91,
+          "probe_offset": 28591970350,
+          "frame_start": 28593978397,
+          "frame_end": 28598716095,
+          "compressed_bytes": 4737699,
+          "decompressed_bytes": 33554432,
+          "sha256": "5a421f6992f695c5fccf047871d14e4c87d77e7666347ea1f3fb524e832b36e3"
+        },
+        {
+          "index": 92,
+          "probe_offset": 29146027319,
+          "frame_start": 29146272386,
+          "frame_end": 29150952133,
+          "compressed_bytes": 4679748,
+          "decompressed_bytes": 33554432,
+          "sha256": "8245abd6e9838c7cab4266dbfe0c66a4f7afd38843e70a2bf3542d059ddc06da"
+        },
+        {
+          "index": 93,
+          "probe_offset": 29402802733,
+          "frame_start": 29403477517,
+          "frame_end": 29408186469,
+          "compressed_bytes": 4708953,
+          "decompressed_bytes": 33554432,
+          "sha256": "bf22d665761ff2f5ef80129bf9dcf4d84f904ba01bd315ce7d8d0c3f8dd2ce0f"
+        },
+        {
+          "index": 94,
+          "probe_offset": 29547690654,
+          "frame_start": 29549449098,
+          "frame_end": 29554156447,
+          "compressed_bytes": 4707350,
+          "decompressed_bytes": 33554432,
+          "sha256": "d5c2daa836b25ff8beca0a6e8e8e8a62c6a7976a66dde2484fe2d96ff04014a8"
+        },
+        {
+          "index": 95,
+          "probe_offset": 29986580615,
+          "frame_start": 29987456906,
+          "frame_end": 29992136622,
+          "compressed_bytes": 4679717,
+          "decompressed_bytes": 33554432,
+          "sha256": "01e9f730d766aabe3101872ca311299b607537fded62191f76b3883471f43a3d"
+        }
+      ]
+    }
+  },
+  "maia_publication": {
+    "repo": "UofTCSSLab/Maia3-23M",
+    "revision": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+    "commits": [
+      {
+        "commit": "51a0145a8178046f7de23119160b136672deeb2b",
+        "date": "2026-05-23T22:15:44+00:00",
+        "title": "Update README.md"
+      },
+      {
+        "commit": "bc515017a2fafa2fc07daee3ccebc2bd61a1125e",
+        "date": "2026-05-23T22:09:27+00:00",
+        "title": "Create README.md"
+      },
+      {
+        "commit": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+        "date": "2026-05-17T23:38:18+00:00",
+        "title": "Upload maia3-23m.pt"
+      },
+      {
+        "commit": "04ddc9a91d1433d9396de6fe0b005503ba4a227e",
+        "date": "2026-05-17T23:36:22+00:00",
+        "title": "initial commit"
+      }
+    ],
+    "files": [
+      {
+        "name": ".gitattributes",
+        "size": 1519,
+        "lfs": null
+      },
+      {
+        "name": "maia3-23m.pt",
+        "size": 91799307,
+        "lfs": {
+          "size": 91799307,
+          "sha256": "bce6cd1af5f0399ac7eed33fabb7a6a2ef6193662c2740f262bf93af7bfb3569",
+          "pointer_size": 133
+        }
+      }
+    ]
+  },
+  "excluded_prior_games": 25000,
+  "sampling": "Stratified compressed-byte chunks, then smallest seeded game hashes per active-player Elo band; one eligible position per game",
+  "filters": "Rated standard blitz; both 600-2600; no BOT; normal/time-forfeit with known result; ply>=20; before first missing/sub-30s clock",
+  "limitation": "Post-publication games cannot be examples in the pinned earlier weights, but recurring positions and human players can overlap.",
+  "status": "Frozen holdout; no model inference, calibration fitting, or training performed on these sets",
+  "future_training_rule": "Never train on July/August 2026 games or any game ID in this holdout. Use validation for selection/calibration; reserve test for final evaluation.",
+  "files_sha256": {
+    "excluded-prior-games.json": "fe5a9492c026da68b19b11fe8a3bd599d9ba87fde7b26a1451ac3a2896de750c",
+    "games.json": "500bcebdf385b2c357d456fdcaebec89fa5edb86a6aaaaa619f66dbb11cb3259",
+    "maia-publication.json": "33d5b1020d92d354932289210294560014af0980718bcf400ad3c635992c6d4b",
+    "positions.jsonl": "e7ee802a030cb805220dacbb7316028f8aa8beab58e0a8b10231a6b4a46758b8",
+    "selected-games.pgn.zst": "51318e55c99dfd3e8fc88cf0e2e4874c3c64ebf2268c3c8ead68c7a7b9de3896",
+    "test/000000.npz": "3d395aa925cc8159251310b54102ce10e5ca5a668f671f0954f4273b9f7cd921",
+    "test/000001.npz": "f4e0aa17bcdf1f6eb31b216730d046695427d4782afba3dca328385caf228bd3",
+    "test/000002.npz": "a1d1ecb347d760f190150a0d906e22d045760ed5d07fcd2cd8b8f52f906d0d8d",
+    "val/000000.npz": "a29db0e231c1207a938bb0e31cf5bc7899b89b1889b7dd3efb4ecbe79094bb72",
+    "val/000001.npz": "1bb04b058ac049965106b88e9c351ca5beede28f8b3becc6c1cc638e81d690fc"
+  }
+}

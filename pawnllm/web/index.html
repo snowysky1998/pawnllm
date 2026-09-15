@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PawnLLM · Human move analysis</title>
+  <link rel="icon" href="/piece/P.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="/">♟ <span>PawnLLM</span></a><span class="header-note">Understand the human move.</span></header>
+  <main>
+    <section class="play-area" aria-label="Two-sided analysis board">
+      <div class="board-heading"><div><div class="eyebrow">HUMAN MOVE ANALYSIS</div><h1>What would they play?</h1></div><span id="color-tag" class="tag">You control both sides</span></div>
+      <div id="preview-banner" class="preview-banner" hidden><strong>Exploring a line</strong><span id="preview-path"></span><div><button id="analysis-back" class="text-button">← Back</button><button id="analysis-live" class="text-button">Return to main line</button></div></div>
+      <div class="board-wrap"><div id="board" class="board" aria-label="Chessboard" aria-busy="true"></div><svg id="arrows" class="arrows" viewBox="0 0 800 800" aria-label="Top three predicted move arrows"></svg></div>
+      <div class="board-footer"><span>Move either side · arrows show the top 3 predictions.</span><button id="flip" class="text-button">Flip board ↻</button></div>
+      <section class="card game-card">
+        <div class="status-row"><span id="status-dot" class="status-dot"></span><strong id="status" role="status" aria-live="polite">Loading position…</strong></div>
+        <p id="error" class="error" role="alert" hidden></p>
+        <button id="new" class="primary">Reset board</button>
+        <button id="undo" class="secondary" disabled>↶ Undo move</button>
+      </section>
+    </section>
+    <aside>
+      <section class="card analysis-card" aria-label="Policy and value analysis">
+        <div class="history-heading"><h2>Human move predictions</h2><span id="model-name">Loading model…</span></div>
+        <div class="rating-controls"><label for="white-elo">White Elo<select id="white-elo"></select></label><label for="black-elo">Black Elo<select id="black-elo"></select></label></div>
+        <p class="rating-note">Lichess blitz · predict moves at these ratings</p>
+        <div class="analysis-title">Predicted outcome <span>White’s perspective</span></div>
+        <div id="wdl-bar" class="wdl-bar" role="img" aria-label="Win, draw, loss probabilities"><span class="white-win"></span><span class="draw"></span><span class="black-win"></span></div>
+        <div id="wdl-labels" class="wdl-labels"></div>
+        <div class="analysis-controls"><div><h2>Likely human moves</h2><span id="policy-side"></span></div><label for="depth">Preview length<select id="depth"><option value="1">1 half-move</option><option value="2">2 half-moves</option><option value="3" selected>3 half-moves</option></select></label></div>
+        <div id="candidates" class="candidates"></div>
+        <p id="policy-coverage" class="analysis-note"></p>
+        <p class="analysis-note">Click a move or line to explore it on the board. Lines follow the most likely human reply at each player’s selected rating. Line values show White’s expected points (win + ½ draw). Early model estimates may be inaccurate.</p>
+      </section>
+
+      <section class="card history-card"><div class="history-heading"><h2>Moves</h2><span id="move-count">0 played</span></div><div id="history" class="history"><p class="empty">Move either side to start your analysis.</p></div></section>
+      <p class="footnote">Ratings condition human-move predictions.<br>They are not a measured engine Elo.</p>
+    </aside>
+  </main>
+  <dialog id="promotion"><h2>Choose your promotion</h2><p>Your pawn has earned an upgrade.</p><div class="promotion-options"></div><button id="cancel-promotion" class="secondary">Cancel</button></dialog>
+</body>
+</html>

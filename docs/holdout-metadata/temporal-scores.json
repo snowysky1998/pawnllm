@@ -1,0 +1,460 @@
+{
+  "evaluated_at": "2026-09-15T14:31:39.908692+00:00",
+  "metrics": {
+    "val": {
+      "pawnllm": {
+        "Overall": {
+          "positions": 5000,
+          "nll": 2.397062624649076,
+          "macro_nll": 2.397062624649076,
+          "human_move_probability": 0.09098481771790888,
+          "probability_ci95": {
+            "low": 0.08737124506852638,
+            "high": 0.09448489763596672
+          }
+        },
+        "600-999": {
+          "positions": 1000,
+          "nll": 2.369355481421799,
+          "macro_nll": 2.369355481421799,
+          "human_move_probability": 0.09354099576316348
+        },
+        "1000-1399": {
+          "positions": 1000,
+          "nll": 2.3002336047083762,
+          "macro_nll": 2.3002336047083762,
+          "human_move_probability": 0.1002354255202614
+        },
+        "1400-1799": {
+          "positions": 1000,
+          "nll": 2.3580763749892837,
+          "macro_nll": 2.3580763749892837,
+          "human_move_probability": 0.09460202710437121
+        },
+        "1800-2199": {
+          "positions": 1000,
+          "nll": 2.474586234294251,
+          "macro_nll": 2.474586234294251,
+          "human_move_probability": 0.0841978212218045
+        },
+        "2200-2600": {
+          "positions": 1000,
+          "nll": 2.4830614278316707,
+          "macro_nll": 2.4830614278316707,
+          "human_move_probability": 0.08348724378549686
+        }
+      },
+      "maia3": {
+        "Overall": {
+          "positions": 5000,
+          "nll": 1.2981111145859494,
+          "macro_nll": 1.2981111145859494,
+          "human_move_probability": 0.27304706085046954,
+          "probability_ci95": {
+            "low": 0.26365153893560117,
+            "high": 0.2821162747522224
+          }
+        },
+        "600-999": {
+          "positions": 1000,
+          "nll": 1.5002661089259477,
+          "macro_nll": 1.5002661089259477,
+          "human_move_probability": 0.2230707911208306
+        },
+        "1000-1399": {
+          "positions": 1000,
+          "nll": 1.3652033465592222,
+          "macro_nll": 1.3652033465592222,
+          "human_move_probability": 0.2553287504859387
+        },
+        "1400-1799": {
+          "positions": 1000,
+          "nll": 1.2441554365937533,
+          "macro_nll": 1.2441554365937533,
+          "human_move_probability": 0.2881841952061584
+        },
+        "1800-2199": {
+          "positions": 1000,
+          "nll": 1.233144997347029,
+          "macro_nll": 1.233144997347029,
+          "human_move_probability": 0.29137476231944504
+        },
+        "2200-2600": {
+          "positions": 1000,
+          "nll": 1.1477856835037952,
+          "macro_nll": 1.1477856835037952,
+          "human_move_probability": 0.3173386802403932
+        }
+      },
+      "stockfish": {
+        "Overall": {
+          "positions": 5000,
+          "nll": 2.340107800445943,
+          "macro_nll": 2.340107800445943,
+          "human_move_probability": 0.09631725462782369,
+          "probability_ci95": {
+            "low": 0.09201505895404986,
+            "high": 0.10072820336176962
+          }
+        },
+        "600-999": {
+          "positions": 1000,
+          "nll": 2.5446875734724204,
+          "macro_nll": 2.5446875734724204,
+          "human_move_probability": 0.07849757287414896
+        },
+        "1000-1399": {
+          "positions": 1000,
+          "nll": 2.445047712386946,
+          "macro_nll": 2.445047712386946,
+          "human_move_probability": 0.0867219970895376
+        },
+        "1400-1799": {
+          "positions": 1000,
+          "nll": 2.304019872561901,
+          "macro_nll": 2.304019872561901,
+          "human_move_probability": 0.0998566249236254
+        },
+        "1800-2199": {
+          "positions": 1000,
+          "nll": 2.261367816920633,
+          "macro_nll": 2.261367816920633,
+          "human_move_probability": 0.10420784996741723
+        },
+        "2200-2600": {
+          "positions": 1000,
+          "nll": 2.145416026887815,
+          "macro_nll": 2.145416026887815,
+          "human_move_probability": 0.1170193437225801
+        }
+      },
+      "random": {
+        "Overall": {
+          "positions": 5000,
+          "nll": 3.3224522771031073,
+          "macro_nll": 3.322452277103107,
+          "human_move_probability": 0.036064283609192456,
+          "probability_ci95": {
+            "low": 0.035344863830584626,
+            "high": 0.036830652827180815
+          }
+        },
+        "600-999": {
+          "positions": 1000,
+          "nll": 3.1838235037025506,
+          "macro_nll": 3.1838235037025506,
+          "human_move_probability": 0.041426955801899576
+        },
+        "1000-1399": {
+          "positions": 1000,
+          "nll": 3.252986207421966,
+          "macro_nll": 3.252986207421966,
+          "human_move_probability": 0.03865859271578855
+        },
+        "1400-1799": {
+          "positions": 1000,
+          "nll": 3.3320023627513238,
+          "macro_nll": 3.3320023627513238,
+          "human_move_probability": 0.03572150599489455
+        },
+        "1800-2199": {
+          "positions": 1000,
+          "nll": 3.4170874863633944,
+          "macro_nll": 3.4170874863633944,
+          "human_move_probability": 0.03280784923213335
+        },
+        "2200-2600": {
+          "positions": 1000,
+          "nll": 3.426361825276299,
+          "macro_nll": 3.426361825276299,
+          "human_move_probability": 0.032504984724259535
+        }
+      }
+    },
+    "test": {
+      "pawnllm": {
+        "Overall": {
+          "positions": 10000,
+          "nll": 2.3778204056899725,
+          "macro_nll": 2.3778204056899725,
+          "human_move_probability": 0.0927525202191178,
+          "probability_ci95": {
+            "low": 0.09009046186160961,
+            "high": 0.09547705461127243
+          }
+        },
+        "600-999": {
+          "positions": 2000,
+          "nll": 2.338726164187697,
+          "macro_nll": 2.338726164187697,
+          "human_move_probability": 0.09645042201237185
+        },
+        "1000-1399": {
+          "positions": 2000,
+          "nll": 2.2843489473363006,
+          "macro_nll": 2.2843489473363006,
+          "human_move_probability": 0.10184034395465928
+        },
+        "1400-1799": {
+          "positions": 2000,
+          "nll": 2.3599997863116076,
+          "macro_nll": 2.3599997863116076,
+          "human_move_probability": 0.0944202433728102
+        },
+        "1800-2199": {
+          "positions": 2000,
+          "nll": 2.437129867620644,
+          "macro_nll": 2.437129867620644,
+          "human_move_probability": 0.08741137398840541
+        },
+        "2200-2600": {
+          "positions": 2000,
+          "nll": 2.4688972629936137,
+          "macro_nll": 2.4688972629936137,
+          "human_move_probability": 0.08467818530349182
+        }
+      },
+      "maia3": {
+        "Overall": {
+          "positions": 10000,
+          "nll": 1.308144957267762,
+          "macro_nll": 1.3081449572677617,
+          "human_move_probability": 0.27032104865666473,
+          "probability_ci95": {
+            "low": 0.26374042940244363,
+            "high": 0.276849163607256
+          }
+        },
+        "600-999": {
+          "positions": 2000,
+          "nll": 1.5046005879469846,
+          "macro_nll": 1.5046005879469846,
+          "human_move_probability": 0.22210598792664987
+        },
+        "1000-1399": {
+          "positions": 2000,
+          "nll": 1.3171414766429457,
+          "macro_nll": 1.3171414766429457,
+          "human_move_probability": 0.26790000690877364
+        },
+        "1400-1799": {
+          "positions": 2000,
+          "nll": 1.325451383884566,
+          "macro_nll": 1.325451383884566,
+          "human_move_probability": 0.2656830069909825
+        },
+        "1800-2199": {
+          "positions": 2000,
+          "nll": 1.251997815869358,
+          "macro_nll": 1.251997815869358,
+          "human_move_probability": 0.28593298440855874
+        },
+        "2200-2600": {
+          "positions": 2000,
+          "nll": 1.1415335219949543,
+          "macro_nll": 1.1415335219949543,
+          "human_move_probability": 0.3193289481773378
+        }
+      },
+      "stockfish": {
+        "Overall": {
+          "positions": 10000,
+          "nll": 2.330508202380037,
+          "macro_nll": 2.330508202380037,
+          "human_move_probability": 0.09724631372143595,
+          "probability_ci95": {
+            "low": 0.0942064130200702,
+            "high": 0.10046632819380749
+          }
+        },
+        "600-999": {
+          "positions": 2000,
+          "nll": 2.5140329763020026,
+          "macro_nll": 2.5140329763020026,
+          "human_move_probability": 0.08094114638014986
+        },
+        "1000-1399": {
+          "positions": 2000,
+          "nll": 2.365269189042207,
+          "macro_nll": 2.365269189042207,
+          "human_move_probability": 0.09392401364990348
+        },
+        "1400-1799": {
+          "positions": 2000,
+          "nll": 2.4069245756647333,
+          "macro_nll": 2.4069245756647333,
+          "human_move_probability": 0.09009193989768932
+        },
+        "1800-2199": {
+          "positions": 2000,
+          "nll": 2.286376940639704,
+          "macro_nll": 2.286376940639704,
+          "human_move_probability": 0.10163402169989119
+        },
+        "2200-2600": {
+          "positions": 2000,
+          "nll": 2.0799373302515387,
+          "macro_nll": 2.0799373302515387,
+          "human_move_probability": 0.12493804178889278
+        }
+      },
+      "random": {
+        "Overall": {
+          "positions": 10000,
+          "nll": 3.3359500522811874,
+          "macro_nll": 3.335950052281187,
+          "human_move_probability": 0.035580766560260366,
+          "probability_ci95": {
+            "low": 0.03508957978089308,
+            "high": 0.03611531231515936
+          }
+        },
+        "600-999": {
+          "positions": 2000,
+          "nll": 3.2315087895955465,
+          "macro_nll": 3.2315087895955465,
+          "human_move_probability": 0.03949785984842074
+        },
+        "1000-1399": {
+          "positions": 2000,
+          "nll": 3.286482418667839,
+          "macro_nll": 3.286482418667839,
+          "human_move_probability": 0.037385123589870825
+        },
+        "1400-1799": {
+          "positions": 2000,
+          "nll": 3.3501295398711135,
+          "macro_nll": 3.3501295398711135,
+          "human_move_probability": 0.03507980957249186
+        },
+        "1800-2199": {
+          "positions": 2000,
+          "nll": 3.383780721945026,
+          "macro_nll": 3.383780721945026,
+          "human_move_probability": 0.033918973803690106
+        },
+        "2200-2600": {
+          "positions": 2000,
+          "nll": 3.427848791326411,
+          "macro_nll": 3.427848791326411,
+          "human_move_probability": 0.032456686833076544
+        }
+      }
+    }
+  },
+  "protocol": {
+    "score": "Geometric mean human-move probability = exp(-mean NLL); equal weight per Elo band in Overall",
+    "calibration": "Frozen from the old pilot validation set; no fitting on July or August; official Maia temperature 1",
+    "training": "Current PawnLLM remains trained on 24,018 games / 192,144 positions; no scaling run yet",
+    "test_status": "First current-system evaluation requested by user; test results are now inspected and cannot be called untouched in future experiments",
+    "limitations": "Different training budgets and implementations. Same later-game examples; recurring positions/players may overlap. Chunk sampling is not uniform over all monthly games."
+  },
+  "provenance": {
+    "dataset_verification": {
+      "verified": true,
+      "positions": {
+        "val": 5000,
+        "test": 10000
+      },
+      "games": {
+        "val": 5000,
+        "test": 10000
+      },
+      "prior_game_overlap": 0,
+      "cross_split_overlap": 0,
+      "publication_cutoff": "2026-05-17T23:38:18+00:00",
+      "maia_revision": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+      "dates": {
+        "val": {
+          "first": "2026-07-01T01:14:44+00:00",
+          "last": "2026-07-31T22:35:53+00:00",
+          "distinct_days": 31
+        },
+        "test": {
+          "first": "2026-08-01T00:40:06+00:00",
+          "last": "2026-08-31T19:56:38+00:00",
+          "distinct_days": 31
+        }
+      },
+      "checks": "Every file checksum, PGN legality, date, clocks, history, seven shard fields, exact Elo quota, and unique game ID; no model inference",
+      "manifest_sha256": "ea9ecb2d2463ab97d064d6f05cdd569c963e3ca81aaad512018f262260d30ccb"
+    },
+    "pawnllm": {
+      "checkpoint": "runs/chess-human-calibrated/best.pt",
+      "step": 5500,
+      "fixed_1500": false,
+      "policy_calibration": {
+        "0": {
+          "temperature": 1.189207115002721,
+          "uniform_mix": 0.0,
+          "validation_nll": 2.2208852524968146,
+          "positions": 848
+        },
+        "1": {
+          "temperature": 1.189207115002721,
+          "uniform_mix": 0.0,
+          "validation_nll": 2.155384608051847,
+          "positions": 800
+        },
+        "2": {
+          "temperature": 1.1095694720678453,
+          "uniform_mix": 0.01,
+          "validation_nll": 2.0799936379918558,
+          "positions": 880
+        },
+        "3": {
+          "temperature": 1.0717734625362934,
+          "uniform_mix": 0.01,
+          "validation_nll": 2.0444224081724864,
+          "positions": 901
+        },
+        "4": {
+          "temperature": 1.189207115002721,
+          "uniform_mix": 0.0,
+          "validation_nll": 2.2256818137561702,
+          "positions": 587
+        }
+      },
+      "sha256": "cfecc3ba76c509df60894f194794401de9edb83c325e3ef710f6cd088bb7f1f6",
+      "positions_sha256": "e7ee802a030cb805220dacbb7316028f8aa8beab58e0a8b10231a6b4a46758b8",
+      "manifest_sha256": "ea9ecb2d2463ab97d064d6f05cdd569c963e3ca81aaad512018f262260d30ccb"
+    },
+    "maia": {
+      "repository": "https://github.com/CSSLab/maia3",
+      "model": "https://huggingface.co/UofTCSSLab/Maia3-23M",
+      "git_commit": "1e13597c42d4858b7cfd7cfdae01e297263364b2",
+      "checkpoint_path": "/home/ralph/.t3/worktrees/pawnllm/t3code-dd8269f8/runs/maia3-cache/models--UofTCSSLab--Maia3-23M/blobs/bce6cd1af5f0399ac7eed33fabb7a6a2ef6193662c2740f262bf93af7bfb3569",
+      "checkpoint_sha256": "bce6cd1af5f0399ac7eed33fabb7a6a2ef6193662c2740f262bf93af7bfb3569",
+      "positions_sha256": "e7ee802a030cb805220dacbb7316028f8aa8beab58e0a8b10231a6b4a46758b8",
+      "parameters": 22936580,
+      "device": "cuda",
+      "precision": "float32, no autocast",
+      "history": "Official tokenizer, chronological last 8 positions; earliest-position padding; real reconstructed history",
+      "ratings": "Actual active/opponent ratings without clipping to pilot bands",
+      "clocks": "Official released preset does not include time info; unused ponder feature set to zero as official UCI",
+      "training": "Released weights, no local fine-tuning. Official column is uncalibrated T=1 over all legal moves.",
+      "caveat": "Games postdate this exact checkpoint publication; recurring positions and players can overlap.",
+      "seconds": 17.380028522999055
+    },
+    "stockfish": {
+      "engine_path": "/home/ralph/.t3/worktrees/pawnllm/t3code-dd8269f8/runs/stockfish/bin/stockfish/stockfish-linux-x86-64-universal",
+      "nodes": 100000,
+      "workers": 4,
+      "threads_per_engine": 1,
+      "hash_mib_per_engine": 64,
+      "multipv": "all legal",
+      "skill_level": 20,
+      "uci_limit_strength": false,
+      "tablebases": false,
+      "fresh_hash_each_position": true,
+      "positions_sha256": "e7ee802a030cb805220dacbb7316028f8aa8beab58e0a8b10231a6b4a46758b8",
+      "binary_sha256": "0f83d24cc46d2c66c60f16001af5444873bc112b7d028594513426894c12da19",
+      "engine_id": {
+        "name": "Stockfish 19",
+        "author": "the Stockfish developers (see AUTHORS file)"
+      }
+    },
+    "frozen_calibration_file": "runs/human-comparison/summary.json",
+    "frozen_calibration_sha256": "2bf9d106d77628955e4c53001101d03c2f85163d0440832e78a9f0bf0042cb1a"
+  }
+}
