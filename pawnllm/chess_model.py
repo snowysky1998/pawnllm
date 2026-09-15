@@ -19,6 +19,7 @@ class ChessConfig:
     gab_size: int = 64
     variant: str = 'pilot'
     rating_conditioned: bool = False
+    fp32_policy: bool = False
 
     def __post_init__(self):
         if min(self.history, self.dim, self.layers, self.heads, self.gab_size) < 1:
@@ -125,13 +126,20 @@ class ChessModel(nn.Module):
         for block in self.blocks:
             x = block(x, self.templates)
         x = self.norm(x)
+        if self.config.fp32_policy:
+            # Large common score offsets destroy move differences when rounded to
+            # BF16. Keep projections, dot products and promotions in FP32.
+            with torch.autocast(device_type=x.device.type, enabled=False):
+                policy = self.policy_head(x.float())
+        else:
+            policy = self.policy_head(x)
+        return policy, self.value(x.mean(1))
+
+    def policy_head(self, x):
         q, k = self.from_proj(x), self.to_proj(x)
         scores = q @ k.transpose(-1, -2) / math.sqrt(self.config.dim)
-        # Canonical promotions go from rank 7 to rank 8. All four pieces have
-        # distinct actions, including queens; ordinary from-to promotion is masked.
         promos = scores[:, 48:56, 56:64, None] + self.promotion(x[:, 56:64])[:, None, :, :]
-        policy = torch.cat((scores.flatten(1), promos.flatten(1)), dim=1)
-        return policy, self.value(x.mean(1))
+        return torch.cat((scores.flatten(1), promos.flatten(1)), dim=1)
 
 
 def masked_policy(logits, legal):

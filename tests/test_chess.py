@@ -141,14 +141,59 @@ class ChessTests(unittest.TestCase):
             manifest = json.loads((root / 'prepared/manifest.json').read_text())
             self.assertEqual(manifest['stats']['scanned_games'], 3)
 
+    def test_fp32_policy_retains_precision_under_autocast(self):
+        model = ChessModel(ChessConfig(dim=32, heads=4, layers=1, gab_size=8,
+                                       fp32_policy=True))
+        # Exaggerated common offset recreates the trained head's rounding issue.
+        with torch.no_grad():
+            model.from_proj.bias.fill_(50.)
+            model.to_proj.bias.fill_(-50.)
+        pieces = torch.zeros((2, 8, 64), dtype=torch.uint8)
+        rules = torch.zeros((2, 7))
+        with torch.autocast('cpu', dtype=torch.bfloat16):
+            policy, value = model(pieces, rules)
+        self.assertEqual(policy.dtype, torch.float32)
+        self.assertTrue(torch.isfinite(policy).all())
+        policy.square().mean().backward()
+        self.assertTrue(torch.isfinite(model.from_proj.weight.grad).all())
+        # Old configs still reproduce the legacy precision behavior.
+        model.config.fp32_policy = False
+        with torch.autocast('cpu', dtype=torch.bfloat16):
+            legacy, _ = model(pieces, rules)
+        self.assertEqual(legacy.dtype, torch.bfloat16)
+
+    def test_train_only_preserves_hash_holdouts_and_records_ids(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / 'source'
+            source.mkdir()
+            ids = [f'game{i}' for i in range(150)]
+            rows = ['\t'.join([gid, '2100', '2200', '300+0', 'Normal', '1-0', 'e4 e5', '']) for gid in ids]
+            (source / '2026-01.tsv.zst').write_bytes(zstandard.ZstdCompressor().compress(('\n'.join(rows) + '\n').encode()))
+            args = argparse.Namespace(source=str(source), output=str(root / 'prepared'), games=150,
+                                      max_scan=200, seed=42, shard_size=32, speeds='blitz', min_elo=2000,
+                                      history=8, positions_per_game=2, min_ply=0, train_only=True)
+            with redirect_stdout(io.StringIO()):
+                prepare(args)
+            records = [json.loads(line) for line in (root / 'prepared/games.jsonl').read_text().splitlines()]
+            self.assertEqual([r['game_id'] for r in records], [gid for gid in ids if game_split(gid) == 'train'])
+            self.assertTrue(all(r['split'] == 'train' for r in records))
+            self.assertFalse(list((root / 'prepared/val').glob('*.npz')))
+            self.assertFalse(list((root / 'prepared/test').glob('*.npz')))
+
     def test_checkpoint_roundtrip(self):
-        model = ChessModel(ChessConfig(dim=32, heads=4, layers=1, gab_size=8))
+        model = ChessModel(ChessConfig(dim=32, heads=4, layers=1, gab_size=8, fp32_policy=True))
         optimizer = torch.optim.AdamW(model.parameters())
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'last.pt'
             save_checkpoint(path, model, optimizer, 3, 1.0, argparse.Namespace(seed=1), {})
             restored, state = load_model(path, torch.device('cpu'))
             self.assertEqual(state['step'], 3)
+            self.assertTrue(restored.config.fp32_policy)
+            state['config'].pop('fp32_policy')
+            torch.save(state, path)
+            legacy, _ = load_model(path, torch.device('cpu'))
+            self.assertFalse(legacy.config.fp32_policy)
             for a, b in zip(model.parameters(), restored.parameters()):
                 torch.testing.assert_close(a, b)
 

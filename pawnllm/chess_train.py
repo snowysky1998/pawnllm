@@ -3,6 +3,7 @@ import argparse
 from contextlib import nullcontext
 from dataclasses import asdict
 import json
+import math
 import multiprocessing
 import os
 from pathlib import Path
@@ -130,6 +131,10 @@ def load_model(path, device):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--data', default='data/chess-pilot')
+    p.add_argument('--validation-data', help='Separate validation dataset; never reads its test split')
+    p.add_argument('--init-from', help='Initialize weights on new data without restoring optimizer or step')
+    p.add_argument('--fp32-policy', action='store_true')
+    p.add_argument('--schedule', choices=('constant', 'cosine'), default='constant')
     p.add_argument('--output', default='runs/chess-pilot')
     p.add_argument('--steps', type=int, default=1000, help='Total optimizer steps, including resumed steps')
     p.add_argument('--batch-size', type=int, default=128)
@@ -153,6 +158,8 @@ def main():
         p.error('Invalid count or interval')
     if args.lr <= 0 or args.value_weight < 0:
         p.error('lr must be positive and value-weight nonnegative')
+    if args.resume and args.init_from:
+        p.error('--resume and --init-from are mutually exclusive')
     if args.evaluate and not args.resume:
         p.error('--evaluate requires --resume')
     torch.set_num_threads(4)
@@ -168,8 +175,8 @@ def main():
     manifest = json.loads((Path(args.data) / 'manifest.json').read_text())
     if manifest['format_version'] != FORMAT_VERSION:
         raise ValueError('Unsupported data format')
-    if args.resume:
-        model, state = load_model(args.resume, device)
+    if args.resume or args.init_from:
+        model, state = load_model(args.resume or args.init_from, device)
         if model.config.history != manifest['args']['history']:
             raise ValueError('History differs between checkpoint and data')
     else:
@@ -179,6 +186,8 @@ def main():
             config.rating_conditioned = args.model == 'human'
         model = ChessModel(config).to(device)
         state = None
+    if args.fp32_policy:
+        model.config.fp32_policy = True
     if model.config.rating_conditioned != manifest.get('rating_conditioned', False):
         raise ValueError('Model and dataset rating conditioning must match')
     if args.selection_metric == 'auto':
@@ -193,7 +202,16 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     step, best = 0, float('inf')
-    if state:
+    validation_root = args.validation_data or args.data
+    validation_manifest = json.loads((Path(validation_root) / 'manifest.json').read_text())
+    if (validation_manifest['format_version'] != FORMAT_VERSION
+            or validation_manifest['args']['history'] != model.config.history
+            or validation_manifest.get('rating_conditioned', False) != model.config.rating_conditioned):
+        raise ValueError('Validation format, history and rating conditioning must match model')
+    args.validation_manifest = validation_manifest
+    if state and args.resume:
+        if state['args'].get('validation_manifest', state['manifest']) != validation_manifest:
+            raise ValueError('Resume requires the same validation manifest; use --init-from for a new experiment')
         if state['manifest'] != manifest:
             raise ValueError('Resume requires the same data manifest')
         optimizer.load_state_dict(state['optimizer'])
@@ -203,7 +221,7 @@ def main():
         if device.type == 'cuda' and state['cuda_rng']:
             torch.cuda.set_rng_state_all(state['cuda_rng'])
     train = loader(args.data, 'train', args.batch_size, args.workers, args.seed + step, True)
-    val = loader(args.data, 'val', args.batch_size, args.workers)
+    val = loader(validation_root, 'val', args.batch_size, args.workers)
     print(json.dumps(dict(parameters=sum(p.numel() for p in model.parameters()), device=str(device), config=asdict(model.config))), flush=True)
     with (output / 'metrics.jsonl').open('a') as log:
         def record(event):
@@ -237,6 +255,9 @@ def main():
             optimizer.zero_grad(set_to_none=True)
             losses = np.zeros(2)
             lr = args.lr * min(1.0, (step + 1) / max(1, args.warmup))
+            if args.schedule == 'cosine' and step >= args.warmup:
+                progress = min(1., (step - args.warmup) / max(1, args.steps - args.warmup - 1))
+                lr *= 0.1 + 0.9 * (1 + math.cos(math.pi * progress)) / 2
             for group in optimizer.param_groups:
                 group['lr'] = lr
             for _ in range(args.accumulation):

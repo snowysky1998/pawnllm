@@ -1,0 +1,29 @@
+{
+  "verified": true,
+  "positions": {
+    "val": 5000,
+    "test": 10000
+  },
+  "games": {
+    "val": 5000,
+    "test": 10000
+  },
+  "prior_game_overlap": 0,
+  "cross_split_overlap": 0,
+  "publication_cutoff": "2026-05-17T23:38:18+00:00",
+  "maia_revision": "6975c77af86aa3f6c95d54a8da4e83e12119a4de",
+  "dates": {
+    "val": {
+      "first": "2026-07-01T01:14:44+00:00",
+      "last": "2026-07-31T22:35:53+00:00",
+      "distinct_days": 31
+    },
+    "test": {
+      "first": "2026-08-01T00:40:06+00:00",
+      "last": "2026-08-31T19:56:38+00:00",
+      "distinct_days": 31
+    }
+  },
+  "checks": "Every file checksum, PGN legality, date, clocks, history, seven shard fields, exact Elo quota, and unique game ID; no model inference",
+  "manifest_sha256": "ea9ecb2d2463ab97d064d6f05cdd569c963e3ca81aaad512018f262260d30ccb"
+}

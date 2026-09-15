@@ -4,11 +4,20 @@ import numpy as np
 import torch
 
 from pawnllm.chess_analysis import policy_probabilities
+from pawnllm.maia_benchmark import aggregate
 from pawnllm.chess_train import selection_score
 from pawnllm.human_benchmark import probabilities, losses, fit_calibration, apply_calibration, summarize, bootstrap_macro
 
 
 class HumanMetricTests(unittest.TestCase):
+    def test_probability_report_uses_equal_band_geometric_mean(self):
+        p = np.array([[.5,.5],[.5,.5],[.125,.875]])
+        target = np.zeros(3,dtype=int)
+        bands = np.array([0,0,1])
+        result = aggregate(p,target,bands,np.ones(3,dtype=bool))
+        self.assertAlmostEqual(result['human_move_probability'],.25)
+        self.assertEqual(aggregate(p,target,bands,np.zeros(3,dtype=bool)),{'positions':0})
+
     def test_served_probabilities_match_benchmark_calibration(self):
         scores = np.array([[2., 1., -3.]])
         calibration = {str(i): dict(temperature=1.+i, uniform_mix=.05*i) for i in range(5)}

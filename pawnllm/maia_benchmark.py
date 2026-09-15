@@ -21,6 +21,8 @@ from pawnllm.human_benchmark import BANDS, probabilities, losses, bootstrap_macr
 
 
 def aggregate(p, target, bands, mask):
+    if not mask.any():
+        return dict(positions=0)
     nll = losses(p[mask], target[mask])
     selected = bands[mask]
     macro = float(np.mean([nll[selected == b].mean() for b in np.unique(selected)]))
@@ -40,7 +42,14 @@ def run(args):
     torch.set_num_threads(4)
     torch.manual_seed(42)
     cfg = parse_args(['--model', '23m', '--device', args.device, '--use-uci-history', '--no-use-amp'])
-    cfg.checkpoint_path = resolve_checkpoint_path(cfg.model_spec, cache_dir=args.cache)
+    cfg.checkpoint_path = resolve_checkpoint_path(cfg.model_spec, cache_dir=args.cache, revision=args.revision)
+    checkpoint_hash = hashlib.sha256(Path(cfg.checkpoint_path).read_bytes()).hexdigest()
+    manifest = json.loads((Path(args.data)/'manifest.json').read_text())
+    publication = manifest.get('maia_publication')
+    if publication:
+        expected = next(f['lfs']['sha256'] for f in publication['files'] if f['name']=='maia3-23m.pt')
+        if checkpoint_hash != expected:
+            raise ValueError('Maia checkpoint differs from the holdout publication proof')
     state = torch.load(cfg.checkpoint_path, map_location='cpu', weights_only=True)
     weights = state['model_state_dict'] if 'model_state_dict' in state else state
     weights = {k.replace('smolgen', 'gab'): v for k, v in weights.items()}
@@ -101,21 +110,24 @@ def run(args):
     test = np.array([r['split'] == 'test' for r in records])
     games = np.array([r['game_id'] for r in records])
     ply = np.array([r['ply'] for r in records])
-    fitted = fit_calibration(scores[val], targets[val], bands[val], np.geomspace(.25, 4, 81))
-    distributions = {'maia3_23m_official': probabilities(scores),
-                     'maia3_23m_calibrated': apply_calibration(scores, bands, fitted)}
+    fitted = None
+    distributions = {'maia3_23m_official': probabilities(scores)}
+    if not args.no_calibration:
+        fitted = fit_calibration(scores[val], targets[val], bands[val], np.geomspace(.25, 4, 81))
+        distributions['maia3_23m_calibrated'] = apply_calibration(scores, bands, fitted)
     result = dict(metadata=dict(
         repository='https://github.com/CSSLab/maia3', model='https://huggingface.co/UofTCSSLab/Maia3-23M',
         git_commit=subprocess.check_output(['git', '-C', args.source, 'rev-parse', 'HEAD'], text=True).strip(),
         checkpoint_path=str(Path(cfg.checkpoint_path).resolve()),
-        checkpoint_sha256=hashlib.sha256(Path(cfg.checkpoint_path).read_bytes()).hexdigest(),
+        checkpoint_sha256=checkpoint_hash,
         positions_sha256=hashlib.sha256(Path(args.positions).read_bytes()).hexdigest(),
         parameters=sum(p.numel() for p in model.parameters()), device=args.device, precision='float32, no autocast',
         history='Official tokenizer, chronological last 8 positions; earliest-position padding; real reconstructed history',
         ratings='Actual active/opponent ratings without clipping to pilot bands',
         clocks='Official released preset does not include time info; unused ponder feature set to zero as official UCI',
         training='Released weights, no local fine-tuning. Official column is uncalibrated T=1 over all legal moves.',
-        caveat='Possible overlap with Maia training games/period; these are only verified held-out from PawnLLM.',
+        caveat=('Games postdate this exact checkpoint publication; recurring positions and players can overlap.' if publication
+                else 'Possible overlap with Maia training games/period; these are only verified held-out from PawnLLM.'),
         seconds=time.monotonic()-start), calibration=fitted, metrics={})
     for name, p in distributions.items():
         result['metrics'][name] = {}
@@ -137,6 +149,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', default='runs/maia3-official')
     parser.add_argument('--cache', default='runs/maia3-cache')
+    parser.add_argument('--revision', help='Pin the Hugging Face checkpoint revision')
+    parser.add_argument('--no-calibration', action='store_true', help='Evaluate official probabilities without fitting on validation')
     parser.add_argument('--data', default='data/chess-human')
     parser.add_argument('--positions', default='runs/stockfish/positions.jsonl')
     parser.add_argument('--output', default='runs/maia3-comparison')

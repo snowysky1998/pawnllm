@@ -141,8 +141,18 @@ class ShardWriter:
 
 def prepare(args, game_callback=None):
     paths = sorted(Path(args.source).glob('*.tsv.zst'))
+    before_month = getattr(args, 'before_month', None)
+    if before_month:
+        paths = [p for p in paths if p.name[:7] < before_month]
     if not paths:
         raise ValueError(f'No TSV archives in {args.source}')
+    excluded = set()
+    exclude_file = getattr(args, 'exclude_games', None)
+    if exclude_file:
+        entries = json.loads(Path(exclude_file).read_text())
+        if not isinstance(entries, list):
+            raise ValueError('exclude-games must be a JSON list of IDs or records with game_id')
+        excluded = {entry['game_id'] if isinstance(entry, dict) else entry for entry in entries}
     root = Path(args.output)
     if root.exists():
         raise ValueError(f'Output already exists: {root}; use a new directory')
@@ -161,6 +171,7 @@ def prepare(args, game_callback=None):
     if conditioned and speeds != ['blitz']:
         raise ValueError('Rating-conditioned pilot uses --speeds blitz to keep one rating pool')
     with ExitStack() as stack:
+        game_ids = stack.enter_context((root / 'games.jsonl').open('w'))
         streams = []
         for path in paths:
             raw = stack.enter_context(path.open('rb'))
@@ -180,6 +191,12 @@ def prepare(args, game_callback=None):
                 try:
                     if len(cols) != 8:
                         raise ValueError('Expected eight columns')
+                    if cols[0] in excluded:
+                        stats['excluded_holdout_games'] += 1
+                        continue
+                    if getattr(args, 'train_only', False) and game_split(cols[0]) != 'train':
+                        stats['excluded_hash_holdouts'] += 1
+                        continue
                     speed = speed_class(cols[3])
                     ratings = [int(cols[1]), int(cols[2])]
                     rating_bin = min(4, max(0, (sum(ratings) // 2 - 600) // 400))
@@ -202,6 +219,7 @@ def prepare(args, game_callback=None):
                 if game_callback is not None:
                     game_callback(cols, samples, split)
                 writer.add(split, samples)
+                game_ids.write(json.dumps(dict(game_id=cols[0], split=split, positions=len(samples))) + '\n')
                 stats['accepted_games'] += 1
                 accepted_speed[speed] += 1
                 if conditioned:
@@ -222,7 +240,12 @@ def prepare(args, game_callback=None):
         manifest['rating_range'] = [600, 2600]
         manifest['rating_game_counts'] = {f'{600 + 400*i}-{999 + 400*i if i < 4 else 2600}': accepted_rating[i] for i in range(5)}
         manifest['rating_balance'] = 'equal game quotas by mean player rating; five 400-point bins'
-    (root / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    if exclude_file:
+        manifest['excluded_games'] = dict(count=len(excluded), file=str(Path(exclude_file).resolve()),
+                                         sha256=hashlib.sha256(Path(exclude_file).read_bytes()).hexdigest())
+    manifest_temp = root / 'manifest.tmp'
+    manifest_temp.write_text(json.dumps(manifest, indent=2) + '\n')
+    manifest_temp.replace(root / 'manifest.json')
     print(json.dumps(manifest, indent=2))
 
 
@@ -265,9 +288,19 @@ def main():
     p.add_argument('--shard-size', type=int, default=4096)
     p.add_argument('--seed', type=int, default=42)
     p.add_argument('--rating-conditioned', action='store_true', help='Store both ratings; balance 600–2600 blitz games by mean rating')
+    p.add_argument('--train-only', action='store_true', help='Accept only training-hash games; use external validation')
+    p.add_argument('--before-month', help='Only read monthly files earlier than YYYY-MM (exclusive cutoff)')
+    p.add_argument('--exclude-games', help='JSON list of reserved game IDs or records with game_id; excluded before sampling')
     args = p.parse_args()
     if min(args.games, args.max_scan, args.positions_per_game, args.history, args.shard_size) < 1 or args.min_ply < 0:
         p.error('Counts must be positive and min-ply nonnegative')
+    if args.before_month:
+        from datetime import datetime
+        try:
+            if datetime.strptime(args.before_month, '%Y-%m').strftime('%Y-%m') != args.before_month:
+                raise ValueError()
+        except ValueError:
+            p.error('before-month must be YYYY-MM')
     prepare(args)
 
 

@@ -86,8 +86,10 @@ type `moves` to list legal moves, `resign` to resign, or `quit` to exit.
 uv run python -m pawnllm.chess_web --host 0.0.0.0
 ```
 
-The browser UI now uses `runs/chess-human-calibrated/best.pt`, the refined 22.8M
-rating-conditioned model with validation-fitted human-move probabilities. Open port 8000 on this machine.
+The browser UI now uses `runs/chess-human-250k/best.pt`, the 22.8M
+rating-conditioned model trained on 250,000 games, with native human-move probabilities. Open port 8000 on this machine.
+For the first ten moves, the UI retains the previous opening model; the new model
+was trained on positions after that point. `--opening-checkpoint` overrides it.
 Without `--host`, the server binds to localhost.
 To use the original training checkpoint, pass `--checkpoint runs/chess-human/best.pt`.
 
@@ -105,9 +107,20 @@ No frontend build or extra dependencies are required. Use `--port 8001` or
 requires a rating-conditioned checkpoint and refuses older unconditioned models.
 
 See [the human-model report](docs/chess-human.md) for preparation/training commands,
-and [the probability evaluation](docs/human-probability-comparison.md) for the current
-checkpoint, Elo-balanced log loss, calibration, Stockfish comparison, and reproduction commands.
+and [the scaling report](docs/chess-scaling.md) for the current checkpoint and later-date
+comparison. The [pilot probability evaluation](docs/human-probability-comparison.md)
+records the earlier calibration and Stockfish comparison.
 The [official Maia comparison](docs/maia-probability-comparison.md) reports human-move
 probability for PawnLLM, Maia-3, Stockfish, and uniform random on the same positions. The earlier
 [enhanced-model comparison](docs/chess-enhanced.md) records the strength-filtered
 experiment; its web launch instructions have been superseded by this analysis UI.
+
+### Fresh temporal holdout
+
+[July/August 2026 validation and test data](docs/temporal-holdout.md) were created
+after the exact Maia-3 checkpoint was published, with clocks, opening filters, and
+zero game overlap with the prior pilot. [Initial baseline scores](docs/temporal-scores.md) record the first evaluation with frozen weights and calibration.
+Use `--before-month 2026-07` and the reserved game-ID list when preparing future training data.
+
+See [the scaling experiment](docs/chess-scaling.md) for the FP32 policy-head fix,
+250,000-game preparation, and strictly later-date validation workflow.

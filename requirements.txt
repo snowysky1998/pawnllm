@@ -6,3 +6,4 @@ datasets
 python-chess
 zstandard
 numpy
+requests

@@ -146,6 +146,7 @@ def extract_model(checkpoint, data, records, sf_rows, fixed=False):
         if cursor != len(split_records):
             raise AssertionError('Incomplete model evaluation')
     return scores, hits, dict(checkpoint=str(checkpoint), step=state['step'], fixed_1500=fixed,
+                        policy_calibration=state.get('policy_calibration'),
                         sha256=hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest())
 
 

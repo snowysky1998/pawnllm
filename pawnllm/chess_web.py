@@ -59,7 +59,11 @@ def position_state(board, sans, color):
                 check=chess.square_name(board.king(board.turn)) if board.is_check() else None)
 
 
-def handler_for(model, device):
+def select_analysis_model(model, opening_model, board):
+    return opening_model if opening_model is not None and board.ply() < 20 else model
+
+
+def handler_for(model, device, opening_model=None):
     inference_lock = threading.Lock()
 
     class Handler(BaseHTTPRequestHandler):
@@ -114,7 +118,9 @@ def handler_for(model, device):
                     board, sans, color = replay_request(payload)
                     state = position_state(board, sans, color)
                 with inference_lock:
-                    state['analysis'] = analyze_board(model, board, device, depth, white_elo=white_elo, black_elo=black_elo)
+                    active_model = select_analysis_model(model, opening_model, board)
+                    state['analysis'] = analyze_board(active_model, board, device, depth, white_elo=white_elo, black_elo=black_elo)
+                    state['analysis']['opening_model_used'] = active_model is opening_model
             except (ValueError, TypeError) as exc:
                 self.send(400, json.dumps(dict(error=str(exc))).encode())
                 return
@@ -129,7 +135,8 @@ def handler_for(model, device):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--checkpoint', default='runs/chess-human-calibrated/best.pt')
+    parser.add_argument('--checkpoint', default='runs/chess-human-250k/best.pt')
+    parser.add_argument('--opening-checkpoint', help='Model for positions before move 11; defaults to the previous model with the 250k checkpoint')
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8000)
     parser.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
@@ -140,7 +147,16 @@ def main():
     if not model.config.rating_conditioned:
         parser.error('The selectable-rating analysis UI requires a --model human checkpoint')
     model.eval()
-    server = ThreadingHTTPServer((args.host, args.port), handler_for(model, device))
+    opening_path = args.opening_checkpoint
+    if opening_path is None and Path(args.checkpoint).resolve() == Path('runs/chess-human-250k/best.pt').resolve():
+        opening_path = 'runs/chess-human-calibrated/best.pt'
+    opening_model = None
+    if opening_path:
+        opening_model, _ = load_model(opening_path, device)
+        if not opening_model.config.rating_conditioned:
+            parser.error('The opening checkpoint must also be rating conditioned')
+        opening_model.eval()
+    server = ThreadingHTTPServer((args.host, args.port), handler_for(model, device, opening_model))
     print(f'Play PawnLLM at http://{args.host}:{args.port}', flush=True)
     try:
         server.serve_forever()
