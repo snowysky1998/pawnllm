@@ -3,3 +3,6 @@ einops
 sentencepiece
 tqdm
 datasets
+python-chess
+zstandard
+numpy
